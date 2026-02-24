@@ -7,6 +7,7 @@ import { StatusBadge } from '@/components/admin/StatusBadge';
 import { BookingDetailActions } from '@/components/admin/BookingDetailActions';
 import { BookingNotesEditor } from '@/components/admin/BookingNotesEditor';
 import { FollowUpEditor } from '@/components/admin/FollowUpEditor';
+import { BookingDocuments } from '@/components/admin/BookingDocuments';
 import { AuditLog } from '@/components/admin/AuditLog';
 import { ArrowLeft, User, MapPin, Phone, Mail } from 'lucide-react';
 
@@ -436,6 +437,22 @@ export default async function BookingDetailPage({ params }: PageProps) {
                 bookingId={booking.id}
                 initialDate={followUpDateStr}
                 initialStaff={booking.assignedStaff}
+              />
+            </div>
+
+            {/* Documents & Communication */}
+            <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+              <h3 className="mb-3 font-semibold text-gray-900">Documents</h3>
+              <BookingDocuments
+                bookingId={booking.id}
+                bookingNumber={booking.bookingNumber}
+                customerEmail={booking.customer.email}
+                currentStatus={booking.status}
+                quoteSentDate={
+                  booking.quoteSentDate
+                    ? new Date(booking.quoteSentDate).toISOString()
+                    : null
+                }
               />
             </div>
 

@@ -7,6 +7,8 @@ import {
   calculateQuote,
   type MembershipTierRates,
 } from '@/lib/pricing-engine';
+import { sendInquiryReceivedEmail } from '@/lib/email/send-inquiry-received';
+import { format } from 'date-fns';
 import { z } from 'zod';
 
 /**
@@ -218,6 +220,22 @@ export async function POST(req: NextRequest) {
 
       return { booking, customer };
     });
+
+    // Send inquiry-received auto-reply email (non-blocking, never crashes the app)
+    if (result.customer.email) {
+      try {
+        await sendInquiryReceivedEmail({
+          to: result.customer.email,
+          customerFirstName: result.customer.fullName.split(' ')[0],
+          bookingNumber: result.booking.bookingNumber,
+          eventDate: format(new Date(validated.eventDate), 'MMMM d, yyyy'),
+          eventType: validated.eventType || 'Event',
+        });
+      } catch (emailError) {
+        console.error('Inquiry received email send failed:', emailError);
+        // Don't throw - booking was created successfully
+      }
+    }
 
     return NextResponse.json(
       {

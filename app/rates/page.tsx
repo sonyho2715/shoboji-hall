@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/lib/db";
+import { DownloadRateSheetButton } from "@/components/shared/DownloadRateSheetButton";
 
 export const dynamic = "force-dynamic";
 
@@ -231,13 +232,14 @@ export default async function RatesPage() {
       </section>
 
       {/* CTA */}
-      <div className="mt-12 text-center">
+      <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
         <Link
           href="/book"
           className="inline-block rounded-lg bg-navy-700 px-8 py-3 font-semibold text-white transition-colors hover:bg-navy-800"
         >
           Get Your Custom Quote
         </Link>
+        <DownloadRateSheetButton />
       </div>
     </div>
   );
