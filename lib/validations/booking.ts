@@ -42,6 +42,18 @@ export const venueRequirementsSchema = z.object({
   barType: z.enum(['hosted', 'cash']).optional(),
   specialRequirements: z.array(z.string()).default([]),
   additionalNotes: z.string().optional(),
+  budgetRange: z.enum(['under_2500', '2500_5000', '5000_10000', '10000_plus']).optional(),
+  readyToReserve: z.boolean().default(false),
+});
+
+export const cateringDetailsSchema = z.object({
+  serviceStyle: z.enum(['buffet', 'bento', 'dropoff']).optional(),
+  cuisines: z.array(z.string()).default([]),
+  cuisineOther: z.string().optional(),
+  dietary: z.string().optional(),
+  menuNotes: z.string().optional(),
+  dessertNeeded: z.boolean().default(false),
+  beverages: z.array(z.string()).default([]),
 });
 
 export const equipmentSelectionSchema = z.object({
@@ -110,6 +122,16 @@ export const createBookingSchema = z.object({
   barType: z.string().optional(),
   specialRequirements: z.array(z.string()).default([]),
   additionalNotes: z.string().optional(),
+  budgetRange: z.enum(['under_2500', '2500_5000', '5000_10000', '10000_plus']).optional(),
+  readyToReserve: z.boolean().default(false),
+
+  // Catering (Nu'uanu Cookhouse)
+  cateringServiceStyle: z.enum(['buffet', 'bento', 'dropoff']).optional(),
+  cateringCuisines: z.array(z.string()).default([]),
+  cateringDietary: z.string().optional(),
+  cateringMenuNotes: z.string().optional(),
+  cateringDessert: z.boolean().default(false),
+  cateringBeverages: z.array(z.string()).default([]),
 
   // Equipment
   equipmentItems: z
@@ -139,6 +161,7 @@ export const createBookingSchema = z.object({
 export type ClientInfo = z.infer<typeof clientInfoSchema>;
 export type EventDetails = z.infer<typeof eventDetailsSchema>;
 export type VenueRequirements = z.infer<typeof venueRequirementsSchema>;
+export type CateringDetails = z.infer<typeof cateringDetailsSchema>;
 export type EquipmentSelection = z.infer<typeof equipmentSelectionSchema>;
 export type QuoteCalculation = z.infer<typeof quoteCalculationSchema>;
 export type CreateBooking = z.infer<typeof createBookingSchema>;

@@ -8,6 +8,7 @@ import {
   type MembershipTierRates,
 } from '@/lib/pricing-engine';
 import { sendInquiryReceivedEmail } from '@/lib/email/send-inquiry-received';
+import { sendCateringNotification } from '@/lib/email/send-catering-notification';
 import { format } from 'date-fns';
 import { z } from 'zod';
 
@@ -112,6 +113,11 @@ export async function POST(req: NextRequest) {
     // Generate booking number
     const bookingNumber = await generateBookingNumber();
 
+    // Determine if booking includes catering
+    const includesCatering =
+      validated.bookingType === 'hall_catering' ||
+      validated.bookingType === 'catering_only';
+
     // Create customer and booking in a transaction
     const result = await db.$transaction(async (tx: Prisma.TransactionClient) => {
       // Find or create customer
@@ -164,6 +170,22 @@ export async function POST(req: NextRequest) {
           additionalNotes: validated.additionalNotes,
           membershipTierId: validated.membershipTierId,
           isFuneralPackage: validated.bookingType === 'funeral_package',
+          budgetRange: validated.budgetRange,
+          readyToReserve: validated.readyToReserve,
+
+          // Catering fields
+          ...(includesCatering
+            ? {
+                cateringServiceStyle: validated.cateringServiceStyle,
+                cateringCuisines: validated.cateringCuisines,
+                cateringDietary: validated.cateringDietary,
+                cateringMenuNotes: validated.cateringMenuNotes,
+                cateringDessert: validated.cateringDessert,
+                cateringBeverages: validated.cateringBeverages,
+                cateringStatus: 'inquiry_sent',
+              }
+            : {}),
+
           hallRentalTotal: quote.hallRentalTotal,
           eventSupportTotal: quote.eventSupportTotal,
           equipmentTotal: quote.equipmentTotal,
@@ -213,6 +235,7 @@ export async function POST(req: NextRequest) {
             bookingNumber,
             status: 'inquiry',
             grandTotal: quote.grandTotal,
+            includesCatering,
           },
           performedBy: 'system',
         },
@@ -221,7 +244,7 @@ export async function POST(req: NextRequest) {
       return { booking, customer };
     });
 
-    // Send inquiry-received auto-reply email (non-blocking, never crashes the app)
+    // Send inquiry-received auto-reply email (non-blocking)
     if (result.customer.email) {
       try {
         await sendInquiryReceivedEmail({
@@ -233,7 +256,38 @@ export async function POST(req: NextRequest) {
         });
       } catch (emailError) {
         console.error('Inquiry received email send failed:', emailError);
-        // Don't throw - booking was created successfully
+      }
+    }
+
+    // Auto-notify Nu'uanu Cookhouse for catering inquiries (non-blocking)
+    if (includesCatering) {
+      try {
+        await sendCateringNotification({
+          bookingNumber: result.booking.bookingNumber,
+          eventDate: format(new Date(validated.eventDate), 'MMMM d, yyyy'),
+          eventStartTime: validated.eventStartTime,
+          eventEndTime: validated.eventEndTime,
+          eventType: validated.eventType || 'Event',
+          totalAttendees,
+          customerName: result.customer.fullName,
+          customerPhone: result.customer.phone || undefined,
+          customerEmail: result.customer.email || undefined,
+          serviceStyle: validated.cateringServiceStyle || 'Not specified',
+          cuisines: validated.cateringCuisines,
+          dietary: validated.cateringDietary || 'None specified',
+          menuNotes: validated.cateringMenuNotes || 'None',
+          dessertNeeded: validated.cateringDessert,
+          beverages: validated.cateringBeverages,
+          budgetRange: validated.budgetRange || 'Not specified',
+        });
+
+        // Update catering notified timestamp
+        await db.booking.update({
+          where: { id: result.booking.id },
+          data: { cateringNotifiedAt: new Date() },
+        });
+      } catch (cateringError) {
+        console.error('Catering notification email failed:', cateringError);
       }
     }
 

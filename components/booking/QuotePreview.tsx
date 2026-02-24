@@ -279,6 +279,44 @@ export function QuotePreview({
         </div>
       </div>
 
+      {/* Catering Summary */}
+      {(formData.venueRequirements.bookingType === "hall_catering" ||
+        formData.venueRequirements.bookingType === "catering_only") &&
+        formData.catering.serviceStyle && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-amber-800">Catering Details</h3>
+            <span className="text-xs text-amber-600">By Nu&#39;uanu Cookhouse</span>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+              {formData.catering.serviceStyle}
+            </span>
+            {formData.catering.cuisines.map((c) => (
+              <span
+                key={c}
+                className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800"
+              >
+                {c}
+              </span>
+            ))}
+            {formData.catering.dessertNeeded && (
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+                Dessert
+              </span>
+            )}
+            {formData.catering.beverages.map((b) => (
+              <span
+                key={b}
+                className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800"
+              >
+                {b.replace(/_/g, " ")}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Cost Breakdown */}
       <div className="rounded-xl border border-stone-200 bg-white">
         <div className="border-b border-stone-100 px-4 py-3">
@@ -404,6 +442,20 @@ export function QuotePreview({
           </div>
         </div>
       </div>
+
+      {/* Catering Note */}
+      {(formData.venueRequirements.bookingType === "hall_catering" ||
+        formData.venueRequirements.bookingType === "catering_only") && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+          <p className="text-sm font-medium text-amber-800">
+            Catering Quote Separate
+          </p>
+          <p className="mt-1 text-sm text-amber-700">
+            Hall rental quote shown above. Catering pricing is separate and
+            will be quoted by Nu&#39;uanu Cookhouse after your inquiry is submitted.
+          </p>
+        </div>
+      )}
 
       {/* Fine Print */}
       <p className="text-center text-xs text-stone-400">

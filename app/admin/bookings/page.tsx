@@ -157,6 +157,9 @@ export default async function BookingsListPage({ searchParams }: PageProps) {
                     Total
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Catering
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                     Status
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
@@ -169,7 +172,7 @@ export default async function BookingsListPage({ searchParams }: PageProps) {
                 {bookings.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={9}
+                      colSpan={10}
                       className="px-4 py-12 text-center text-sm text-gray-400"
                     >
                       {searchQuery || statusFilter
@@ -207,6 +210,23 @@ export default async function BookingsListPage({ searchParams }: PageProps) {
                       </td>
                       <td className="whitespace-nowrap px-4 py-3 text-sm font-medium text-gray-700">
                         {formatCurrency(booking.grandTotal)}
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3 text-center">
+                        {(booking.bookingType === 'hall_catering' ||
+                          booking.bookingType === 'catering_only') ? (
+                          booking.cateringStatus === 'inquiry_sent' ||
+                          booking.cateringStatus === 'confirmed' ? (
+                            <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                              C&#10003;
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                              &#127869;
+                            </span>
+                          )
+                        ) : (
+                          <span className="text-xs text-gray-300">--</span>
+                        )}
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
                         <StatusBadge status={booking.status} />

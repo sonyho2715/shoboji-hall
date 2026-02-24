@@ -9,6 +9,16 @@ interface VenueRequirementsFormProps {
 
 const bookingTypes = [
   {
+    value: "hall_catering",
+    label: "Hall + Catering",
+    description: "Hall rental with in-house catering by Nu'uanu Cookhouse",
+    icon: (
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513M15 8.25v-1.5m-6 1.5v-1.5m12 9.75l-1.5.75a3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0L3 16.5m15-3.379a48.474 48.474 0 00-6-.371c-2.032 0-4.034.126-6 .371m12 0c.39.049.777.102 1.163.16 1.07.16 1.837 1.094 1.837 2.175v5.169c0 .621-.504 1.125-1.125 1.125H4.125A1.125 1.125 0 013 20.625v-5.17c0-1.08.768-2.014 1.837-2.174A47.78 47.78 0 016 13.12M12.265 3.11a.375.375 0 11-.53 0L12 2.845l.265.265zm-3 0a.375.375 0 11-.53 0L9 2.845l.265.265zm6 0a.375.375 0 11-.53 0L15 2.845l.265.265z" />
+      </svg>
+    ),
+  },
+  {
     value: "hall_rental",
     label: "Hall Rental",
     description: "Rent the hall for your own event with full flexibility",
@@ -19,19 +29,9 @@ const bookingTypes = [
     ),
   },
   {
-    value: "hall_catering",
-    label: "Hall + Catering",
-    description: "Hall rental with our catering kitchen and support",
-    icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513M15 8.25v-1.5m-6 1.5v-1.5m12 9.75l-1.5.75a3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0L3 16.5m15-3.379a48.474 48.474 0 00-6-.371c-2.032 0-4.034.126-6 .371m12 0c.39.049.777.102 1.163.16 1.07.16 1.837 1.094 1.837 2.175v5.169c0 .621-.504 1.125-1.125 1.125H4.125A1.125 1.125 0 013 20.625v-5.17c0-1.08.768-2.014 1.837-2.174A47.78 47.78 0 016 13.12M12.265 3.11a.375.375 0 11-.53 0L12 2.845l.265.265zm-3 0a.375.375 0 11-.53 0L9 2.845l.265.265zm6 0a.375.375 0 11-.53 0L15 2.845l.265.265z" />
-      </svg>
-    ),
-  },
-  {
     value: "catering_only",
     label: "Catering Only",
-    description: "Use our kitchen and catering facilities without the hall",
+    description: "Catering by Nu'uanu Cookhouse without hall rental",
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.047 8.287 8.287 0 009 9.601a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
@@ -60,12 +60,21 @@ const roomSetups = [
 ];
 
 const specialRequirementOptions = [
-  "AV System",
-  "Stage Setup",
-  "Extra Parking",
-  "Kitchen Access",
-  "Ceremony Arch",
-  "Custom Linens",
+  "Stage",
+  "Podium",
+  "Dance Floor",
+  "DJ / Band Area",
+  "AV Equipment",
+  "Projector / Screen",
+  "Security",
+  "Decorations Allowed",
+];
+
+const budgetOptions = [
+  { value: "under_2500", label: "Under $2,500" },
+  { value: "2500_5000", label: "$2,500 -- $5,000" },
+  { value: "5000_10000", label: "$5,000 -- $10,000" },
+  { value: "10000_plus", label: "$10,000+" },
 ];
 
 export function VenueRequirementsForm({
@@ -86,15 +95,19 @@ export function VenueRequirementsForm({
   const bookingType = useWatch({ control, name: "bookingType" });
   const alcoholServed = useWatch({ control, name: "alcoholServed" });
   const roomSetup = useWatch({ control, name: "roomSetup" });
+  const budgetRange = useWatch({ control, name: "budgetRange" });
+  const readyToReserve = useWatch({ control, name: "readyToReserve" });
+
+  const hasCatering = bookingType === "hall_catering" || bookingType === "catering_only";
 
   return (
     <form onSubmit={handleSubmit(onNext)} className="space-y-8">
       <div>
         <h2 className="text-2xl font-bold text-stone-900">
-          Venue Requirements
+          Venue & Budget
         </h2>
         <p className="mt-1 text-sm text-stone-500">
-          Configure your event space and any special needs.
+          Configure your event space, special needs, and budget range.
         </p>
       </div>
 
@@ -150,6 +163,19 @@ export function VenueRequirementsForm({
             table and chair setup, kitchen access, and event support staff. The
             flat rate is based on your membership tier and expected attendance.
             No overtime charges apply for standard 4-hour receptions.
+          </p>
+        </div>
+      )}
+
+      {/* Catering info */}
+      {hasCatering && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+          <h4 className="font-semibold text-amber-800">
+            In-House Catering by Nu&#39;uanu Cookhouse
+          </h4>
+          <p className="mt-1 text-sm text-amber-700">
+            You&#39;ll provide catering preferences in the next step. Nu&#39;uanu Cookhouse will
+            follow up with a separate catering quote after your inquiry is submitted.
           </p>
         </div>
       )}
@@ -262,7 +288,7 @@ export function VenueRequirementsForm({
         <legend className="text-sm font-medium text-stone-700">
           Special Requirements
         </legend>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
           {specialRequirementOptions.map((req) => (
             <label
               key={req}
@@ -294,6 +320,102 @@ export function VenueRequirementsForm({
         />
       </div>
 
+      {/* Budget Range */}
+      <fieldset>
+        <legend className="text-sm font-medium text-stone-700">
+          Estimated Budget Range
+        </legend>
+        <p className="mt-0.5 text-xs text-stone-500">
+          Helps us tailor the best options for your event.
+        </p>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {budgetOptions.map((opt) => {
+            const isSelected = budgetRange === opt.value;
+            return (
+              <label
+                key={opt.value}
+                className={`flex cursor-pointer items-center justify-center rounded-xl border-2 px-4 py-3 text-center transition-colors ${
+                  isSelected
+                    ? "border-navy-700 bg-navy-700/5"
+                    : "border-stone-200 hover:border-stone-300"
+                }`}
+              >
+                <input
+                  type="radio"
+                  value={opt.value}
+                  {...register("budgetRange")}
+                  className="sr-only"
+                />
+                <span className={`text-sm font-semibold ${isSelected ? "text-navy-700" : "text-stone-700"}`}>
+                  {opt.label}
+                </span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      {/* Ready to Reserve */}
+      <fieldset>
+        <legend className="text-sm font-medium text-stone-700">
+          Are you ready to reserve your date?
+        </legend>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <label
+            className={`flex cursor-pointer items-start gap-3 rounded-xl border-2 p-4 transition-colors ${
+              readyToReserve === true
+                ? "border-forest-600 bg-forest-600/5"
+                : "border-stone-200 hover:border-stone-300"
+            }`}
+          >
+            <input
+              type="radio"
+              value="true"
+              checked={readyToReserve === true}
+              onChange={() => setValue("readyToReserve", true)}
+              className="sr-only"
+            />
+            <div className={`mt-0.5 ${readyToReserve === true ? "text-forest-600" : "text-stone-400"}`}>
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p className={`font-semibold ${readyToReserve === true ? "text-forest-600" : "text-stone-800"}`}>
+                Yes, I&#39;m ready to reserve
+              </p>
+              <p className="mt-0.5 text-xs text-stone-500">I want to lock in my date</p>
+            </div>
+          </label>
+          <label
+            className={`flex cursor-pointer items-start gap-3 rounded-xl border-2 p-4 transition-colors ${
+              readyToReserve === false
+                ? "border-navy-700 bg-navy-700/5"
+                : "border-stone-200 hover:border-stone-300"
+            }`}
+          >
+            <input
+              type="radio"
+              value="false"
+              checked={readyToReserve === false}
+              onChange={() => setValue("readyToReserve", false)}
+              className="sr-only"
+            />
+            <div className={`mt-0.5 ${readyToReserve === false ? "text-navy-700" : "text-stone-400"}`}>
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+              </svg>
+            </div>
+            <div>
+              <p className={`font-semibold ${readyToReserve === false ? "text-navy-700" : "text-stone-800"}`}>
+                Just gathering information
+              </p>
+              <p className="mt-0.5 text-xs text-stone-500">Still exploring options</p>
+            </div>
+          </label>
+        </div>
+      </fieldset>
+
       {/* Navigation */}
       <div className="flex justify-between pt-4">
         <button
@@ -307,7 +429,7 @@ export function VenueRequirementsForm({
           type="submit"
           className="rounded-lg bg-navy-700 px-8 py-3 font-semibold text-white transition-colors hover:bg-navy-800"
         >
-          Next: Equipment
+          {hasCatering ? "Next: Catering" : "Next: Equipment"}
         </button>
       </div>
     </form>

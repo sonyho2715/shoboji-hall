@@ -29,6 +29,17 @@ export interface BookingFormData {
     barType: string;
     specialRequirements: string[];
     additionalNotes: string;
+    budgetRange: string;
+    readyToReserve: boolean;
+  };
+  catering: {
+    serviceStyle: string;
+    cuisines: string[];
+    cuisineOther: string;
+    dietary: string;
+    menuNotes: string;
+    dessertNeeded: boolean;
+    beverages: string[];
   };
   equipment: Array<{
     equipmentId: number;

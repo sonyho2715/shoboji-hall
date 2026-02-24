@@ -107,7 +107,16 @@ export function EventDetailsForm({
             id="eventDate"
             type="date"
             min={today}
-            {...register("eventDate", { required: "Event date is required" })}
+            {...register("eventDate", {
+              required: "Event date is required",
+              validate: (value) => {
+                const date = new Date(value + "T00:00:00");
+                if (date.getDay() === 0) {
+                  return "The hall is not available on Sundays. Please select Monday -- Saturday.";
+                }
+                return true;
+              },
+            })}
             className="mt-1 block w-full rounded-lg border border-stone-300 bg-white px-3 py-2.5 text-stone-900 focus:border-navy-600 focus:ring-2 focus:ring-navy-600/20 focus:outline-none"
           />
           {errors.eventDate && (

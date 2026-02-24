@@ -1,17 +1,15 @@
-const steps = [
-  { number: 1, label: "Your Info" },
-  { number: 2, label: "Event Details" },
-  { number: 3, label: "Venue" },
-  { number: 4, label: "Equipment" },
-  { number: 5, label: "Review" },
-];
+export interface StepDef {
+  number: number;
+  label: string;
+}
 
 interface StepIndicatorProps {
   currentStep: number;
+  steps: StepDef[];
   onStepClick?: (step: number) => void;
 }
 
-export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) {
+export function StepIndicator({ currentStep, steps, onStepClick }: StepIndicatorProps) {
   return (
     <nav aria-label="Booking progress" className="mb-8">
       {/* Mobile */}
@@ -20,7 +18,7 @@ export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) 
           Step {currentStep} of {steps.length}
         </p>
         <p className="text-sm font-semibold text-navy-700">
-          {steps[currentStep - 1].label}
+          {steps[currentStep - 1]?.label}
         </p>
       </div>
       <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-stone-200 sm:hidden">

@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { StepIndicator } from "./StepIndicator";
+import type { StepDef } from "./StepIndicator";
 import { ClientInfoForm } from "./ClientInfoForm";
 import { EventDetailsForm } from "./EventDetailsForm";
 import { VenueRequirementsForm } from "./VenueRequirementsForm";
+import { CateringDetailsForm } from "./CateringDetailsForm";
 import { EquipmentSelector } from "./EquipmentSelector";
 import { QuotePreview } from "./QuotePreview";
 import type {
@@ -44,15 +46,30 @@ const initialFormData: BookingFormData = {
     referralSource: "",
   },
   venueRequirements: {
-    bookingType: "hall_rental",
+    bookingType: "hall_catering",
     roomSetup: "",
     alcoholServed: false,
     barType: "",
     specialRequirements: [],
     additionalNotes: "",
+    budgetRange: "",
+    readyToReserve: false,
+  },
+  catering: {
+    serviceStyle: "",
+    cuisines: [],
+    cuisineOther: "",
+    dietary: "",
+    menuNotes: "",
+    dessertNeeded: false,
+    beverages: [],
   },
   equipment: [],
 };
+
+function hasCateringStep(bookingType: string): boolean {
+  return bookingType === "hall_catering" || bookingType === "catering_only";
+}
 
 export function BookingWizard({
   tiers,
@@ -63,6 +80,36 @@ export function BookingWizard({
   const [formData, setFormData] = useState<BookingFormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const showCatering = hasCateringStep(formData.venueRequirements.bookingType);
+
+  // Build steps dynamically
+  const steps: StepDef[] = useMemo(() => {
+    if (showCatering) {
+      return [
+        { number: 1, label: "Your Info" },
+        { number: 2, label: "Event Details" },
+        { number: 3, label: "Venue & Budget" },
+        { number: 4, label: "Catering" },
+        { number: 5, label: "Equipment" },
+        { number: 6, label: "Review & Quote" },
+      ];
+    }
+    return [
+      { number: 1, label: "Your Info" },
+      { number: 2, label: "Event Details" },
+      { number: 3, label: "Venue & Budget" },
+      { number: 4, label: "Equipment" },
+      { number: 5, label: "Review & Quote" },
+    ];
+  }, [showCatering]);
+
+  // Map logical step to actual step number
+  // With catering: 1=Info, 2=Event, 3=Venue, 4=Catering, 5=Equipment, 6=Quote
+  // Without catering: 1=Info, 2=Event, 3=Venue, 4=Equipment, 5=Quote
+  const equipmentStep = showCatering ? 5 : 4;
+  const quoteStep = showCatering ? 6 : 5;
+  const cateringStep = 4; // only valid when showCatering
 
   function goToStep(step: number) {
     setCurrentStep(step);
@@ -81,12 +128,22 @@ export function BookingWizard({
 
   function handleVenueNext(data: BookingFormData["venueRequirements"]) {
     setFormData((prev) => ({ ...prev, venueRequirements: data }));
-    goToStep(4);
+    const nextHasCatering = hasCateringStep(data.bookingType);
+    if (nextHasCatering) {
+      goToStep(4); // Catering step
+    } else {
+      goToStep(4); // Equipment step (which is step 4 without catering)
+    }
+  }
+
+  function handleCateringNext(data: BookingFormData["catering"]) {
+    setFormData((prev) => ({ ...prev, catering: data }));
+    goToStep(equipmentStep);
   }
 
   function handleEquipmentNext(data: BookingFormData["equipment"]) {
     setFormData((prev) => ({ ...prev, equipment: data }));
-    goToStep(5);
+    goToStep(quoteStep);
   }
 
   async function handleSubmit() {
@@ -94,6 +151,8 @@ export function BookingWizard({
     setSubmitError(null);
 
     try {
+      const includesCatering = hasCateringStep(formData.venueRequirements.bookingType);
+
       const payload = {
         // Client info
         fullName: formData.clientInfo.fullName,
@@ -126,6 +185,20 @@ export function BookingWizard({
         specialRequirements: formData.venueRequirements.specialRequirements,
         additionalNotes:
           formData.venueRequirements.additionalNotes || undefined,
+        budgetRange: formData.venueRequirements.budgetRange || undefined,
+        readyToReserve: formData.venueRequirements.readyToReserve,
+
+        // Catering
+        ...(includesCatering
+          ? {
+              cateringServiceStyle: formData.catering.serviceStyle || undefined,
+              cateringCuisines: formData.catering.cuisines,
+              cateringDietary: formData.catering.dietary || undefined,
+              cateringMenuNotes: formData.catering.menuNotes || undefined,
+              cateringDessert: formData.catering.dessertNeeded,
+              cateringBeverages: formData.catering.beverages,
+            }
+          : {}),
 
         // Equipment
         equipmentItems: formData.equipment.map((e) => ({
@@ -166,6 +239,7 @@ export function BookingWizard({
     <div>
       <StepIndicator
         currentStep={currentStep}
+        steps={steps}
         onStepClick={(step) => {
           if (step < currentStep) goToStep(step);
         }}
@@ -193,20 +267,27 @@ export function BookingWizard({
             onBack={() => goToStep(2)}
           />
         )}
-        {currentStep === 4 && (
+        {showCatering && currentStep === cateringStep && (
+          <CateringDetailsForm
+            data={formData.catering}
+            onNext={handleCateringNext}
+            onBack={() => goToStep(3)}
+          />
+        )}
+        {currentStep === equipmentStep && (
           <EquipmentSelector
             data={formData.equipment}
             categories={equipmentCategories}
             onNext={handleEquipmentNext}
-            onBack={() => goToStep(3)}
+            onBack={() => goToStep(showCatering ? cateringStep : 3)}
           />
         )}
-        {currentStep === 5 && (
+        {currentStep === quoteStep && (
           <QuotePreview
             formData={formData}
             tiers={tiers}
             onSubmit={handleSubmit}
-            onBack={() => goToStep(4)}
+            onBack={() => goToStep(equipmentStep)}
             onGoToStep={goToStep}
             isSubmitting={isSubmitting}
             submitError={submitError}

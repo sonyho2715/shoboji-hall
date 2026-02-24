@@ -175,6 +175,55 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* In-House Catering Section */}
+      <section className="bg-stone-50 py-16">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="flex flex-col items-center gap-12 lg:flex-row">
+            <div className="flex-1">
+              <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-amber-700">
+                In-House Catering Partner
+              </p>
+              <h2 className="text-3xl font-bold text-slate-900">
+                Nu&#39;uanu Cookhouse
+              </h2>
+              <p className="mb-6 mt-4 text-lg text-slate-600">
+                Authentic local Hawaiian cuisine available for your event through our in-house catering partner.
+                From intimate gatherings to large celebrations, Nu&#39;uanu Cookhouse brings the flavors of Hawaii to your table.
+              </p>
+              <div className="mb-8 grid grid-cols-2 gap-3">
+                {['Local Plate Lunch', 'Hawaiian', 'Japanese', 'Korean', 'American Comfort', 'Fusion'].map(cuisine => (
+                  <div key={cuisine} className="flex items-center gap-2 text-slate-700">
+                    <span className="text-amber-600">&#10003;</span>
+                    <span>{cuisine}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-sm text-amber-800">Buffet Style</span>
+                <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-sm text-amber-800">Bento Boxes</span>
+                <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-sm text-amber-800">Drop-Off Available</span>
+                <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-sm text-amber-800">Beverage Service</span>
+              </div>
+            </div>
+            <div className="flex-1 rounded-2xl border border-stone-200 bg-white p-8 shadow-sm">
+              <h3 className="font-semibold text-slate-900">Book Hall + Catering Together</h3>
+              <ul className="mb-6 mt-4 space-y-3 text-slate-600">
+                <li className="flex items-start gap-2"><span className="font-bold text-green-600">&#10003;</span> One booking form for both hall and catering</li>
+                <li className="flex items-start gap-2"><span className="font-bold text-green-600">&#10003;</span> Catering inquiry forwarded automatically</li>
+                <li className="flex items-start gap-2"><span className="font-bold text-green-600">&#10003;</span> Separate catering quote from Nu&#39;uanu Cookhouse</li>
+                <li className="flex items-start gap-2"><span className="font-bold text-green-600">&#10003;</span> Coordination handled by our team</li>
+              </ul>
+              <Link
+                href="/book"
+                className="block w-full rounded-lg bg-slate-900 py-3 text-center font-semibold text-white transition-colors hover:bg-slate-800"
+              >
+                Book Hall + Catering
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Preview */}
       {previewTiers.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">

@@ -9,6 +9,7 @@ import { BookingNotesEditor } from '@/components/admin/BookingNotesEditor';
 import { FollowUpEditor } from '@/components/admin/FollowUpEditor';
 import { BookingDocuments } from '@/components/admin/BookingDocuments';
 import { AuditLog } from '@/components/admin/AuditLog';
+import { CateringDetails } from '@/components/admin/CateringDetails';
 import { ArrowLeft, User, MapPin, Phone, Mail } from 'lucide-react';
 
 function formatDate(date: Date | string): string {
@@ -208,6 +209,37 @@ export default async function BookingDetailPage({ params }: PageProps) {
                     {booking.referralSource?.replace(/_/g, ' ') || 'Not specified'}
                   </dd>
                 </div>
+                <div>
+                  <dt className="text-xs font-medium uppercase text-gray-400">
+                    Budget Range
+                  </dt>
+                  <dd className="mt-0.5 text-sm text-gray-700">
+                    {booking.budgetRange
+                      ? {
+                          under_2500: 'Under $2,500',
+                          '2500_5000': '$2,500 -- $5,000',
+                          '5000_10000': '$5,000 -- $10,000',
+                          '10000_plus': '$10,000+',
+                        }[booking.budgetRange] || booking.budgetRange
+                      : 'Not specified'}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-medium uppercase text-gray-400">
+                    Ready to Reserve
+                  </dt>
+                  <dd className="mt-0.5">
+                    {booking.readyToReserve ? (
+                      <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700">
+                        Yes, ready to reserve
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
+                        Gathering information
+                      </span>
+                    )}
+                  </dd>
+                </div>
               </dl>
               {booking.eventDescription && (
                 <div className="mt-3 border-t border-gray-100 pt-3">
@@ -267,6 +299,26 @@ export default async function BookingDetailPage({ params }: PageProps) {
                 </div>
               </div>
             </div>
+
+            {/* Catering Details */}
+            {(booking.bookingType === 'hall_catering' ||
+              booking.bookingType === 'catering_only') && (
+              <CateringDetails
+                bookingId={booking.id}
+                serviceStyle={booking.cateringServiceStyle}
+                cuisines={(booking.cateringCuisines as string[]) || []}
+                dietary={booking.cateringDietary}
+                menuNotes={booking.cateringMenuNotes}
+                dessertNeeded={booking.cateringDessert}
+                beverages={(booking.cateringBeverages as string[]) || []}
+                cateringStatus={booking.cateringStatus}
+                cateringNotifiedAt={
+                  booking.cateringNotifiedAt
+                    ? new Date(booking.cateringNotifiedAt).toISOString()
+                    : null
+                }
+              />
+            )}
 
             {/* Equipment Breakdown */}
             {booking.bookingEquipment.length > 0 && (

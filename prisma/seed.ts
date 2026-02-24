@@ -124,134 +124,114 @@ async function main() {
   });
   console.log(`  Created ${staffingRules.count} staffing rules`);
 
-  // ---- Equipment Categories + Items ----
+  // ---- Equipment Categories + Items (Official Rate Sheet) ----
   await prisma.bookingEquipment.deleteMany();
   await prisma.equipmentItem.deleteMany();
   await prisma.equipmentCategory.deleteMany();
 
   const categories = [
     {
-      name: 'Table',
+      name: 'Tables & Chairs',
       sortOrder: 1,
       items: [
-        { name: '6ft Rectangular Table', description: 'Standard 6-foot folding table, seats 6-8', ratePerEvent: 10, quantityAvailable: 30, sortOrder: 1 },
-        { name: '8ft Rectangular Table', description: 'Large 8-foot folding table, seats 8-10', ratePerEvent: 15, quantityAvailable: 20, sortOrder: 2 },
-        { name: '5ft Round Table', description: '60-inch round banquet table, seats 8-10', ratePerEvent: 15, quantityAvailable: 25, sortOrder: 3 },
-        { name: 'Cocktail High-Top Table', description: '30-inch round cocktail table, standing height', ratePerEvent: 20, quantityAvailable: 10, sortOrder: 4 },
-        { name: 'Head Table (Skirted)', description: '8ft table with linen skirting for head table', ratePerEvent: 35, quantityAvailable: 4, sortOrder: 5 },
+        { name: 'Table, 8 ft', description: '8-foot rectangular folding table', ratePerEvent: 5.00, quantityAvailable: 20, sortOrder: 1 },
+        { name: 'Table, 6 ft', description: '6-foot rectangular folding table', ratePerEvent: 5.00, quantityAvailable: 20, sortOrder: 2 },
+        { name: 'Chair', description: 'Folding banquet chair', ratePerEvent: 2.00, quantityAvailable: 200, sortOrder: 3 },
       ],
     },
     {
-      name: 'Chair',
+      name: 'Stands',
       sortOrder: 2,
       items: [
-        { name: 'Standard Folding Chair', description: 'Metal folding chair with padded seat', ratePerEvent: 2, quantityAvailable: 300, sortOrder: 1 },
-        { name: 'Padded Banquet Chair', description: 'Upholstered stacking banquet chair', ratePerEvent: 5, quantityAvailable: 200, sortOrder: 2 },
-        { name: 'White Resin Chair', description: 'White resin folding chair for ceremonies', ratePerEvent: 4, quantityAvailable: 150, sortOrder: 3 },
-      ],
-    },
-    {
-      name: 'Stand',
-      sortOrder: 3,
-      items: [
-        { name: 'Music Stand', description: 'Adjustable music stand', ratePerEvent: 10, quantityAvailable: 6, sortOrder: 1 },
-        { name: 'Speaker Stand (Tripod)', description: 'Heavy-duty tripod speaker stand', ratePerEvent: 15, quantityAvailable: 8, sortOrder: 2 },
-        { name: 'Microphone Boom Stand', description: 'Adjustable boom microphone stand', ratePerEvent: 10, quantityAvailable: 10, sortOrder: 3 },
-        { name: 'Lighting Stand', description: 'Heavy-duty lighting tripod stand', ratePerEvent: 15, quantityAvailable: 6, sortOrder: 4 },
+        { name: 'Stand', description: 'General purpose stand', ratePerEvent: 15.00, quantityAvailable: 10, sortOrder: 1 },
+        { name: 'Stand, Microphone', description: 'Adjustable microphone stand', ratePerEvent: 25.00, quantityAvailable: 10, sortOrder: 2 },
+        { name: 'Stand, Tripod', description: 'Tripod stand for lighting or equipment', ratePerEvent: 20.00, quantityAvailable: 5, sortOrder: 3 },
       ],
     },
     {
       name: 'Stage',
-      sortOrder: 4,
+      sortOrder: 3,
       items: [
-        { name: 'Stage Platform (4x8)', description: '4x8 ft modular stage section, 16-24 inch height', ratePerEvent: 50, quantityAvailable: 8, sortOrder: 1 },
-        { name: 'Stage Stairs (3-step)', description: 'Portable 3-step stage stairs with handrail', ratePerEvent: 25, quantityAvailable: 4, sortOrder: 2 },
-        { name: 'Stage Skirting (per section)', description: 'Black fabric skirting per stage section', ratePerEvent: 15, quantityAvailable: 8, sortOrder: 3 },
-        { name: 'Portable Dance Floor (4x4)', description: '4x4 ft interlocking dance floor panels', ratePerEvent: 20, quantityAvailable: 16, sortOrder: 4 },
+        { name: 'Stage Platform', description: 'Modular stage platform', ratePerEvent: 100.00, quantityAvailable: 4, sortOrder: 1 },
       ],
     },
     {
       name: 'Lighting',
+      sortOrder: 4,
+      items: [
+        { name: 'Lights, Strobe 3"', description: '3" strobe light', ratePerEvent: 35.00, quantityAvailable: 4, sortOrder: 1 },
+        { name: 'Lights, Laser 6"', description: '6" laser light', ratePerEvent: 35.00, quantityAvailable: 4, sortOrder: 2 },
+        { name: 'Lights, Disco Ball 6"', description: '6" disco ball light', ratePerEvent: 35.00, quantityAvailable: 4, sortOrder: 3 },
+        { name: 'Lights, Flashing Par 25', description: 'Par 25 flashing stage light', ratePerEvent: 35.00, quantityAvailable: 8, sortOrder: 4 },
+      ],
+    },
+    {
+      name: 'Power & Cables',
       sortOrder: 5,
       items: [
-        { name: 'PAR Can LED (RGBA)', description: 'LED wash light, RGBA color mixing', ratePerEvent: 25, quantityAvailable: 12, sortOrder: 1 },
-        { name: 'Moving Head Spot', description: 'Moving head spotlight for stage shows', ratePerEvent: 75, quantityAvailable: 4, sortOrder: 2 },
-        { name: 'String Lights (50ft)', description: '50ft strand of warm white bistro lights', ratePerEvent: 20, quantityAvailable: 10, sortOrder: 3 },
-        { name: 'Uplighting Package (8 units)', description: '8 wireless LED uplights for ambient lighting', ratePerEvent: 100, quantityAvailable: 2, sortOrder: 4 },
-        { name: 'Follow Spot', description: 'Manual follow spotlight for performances', ratePerEvent: 50, quantityAvailable: 2, sortOrder: 5 },
+        { name: 'Power Distribution Strip', description: 'Power distribution strip', ratePerEvent: 10.00, quantityAvailable: 5, sortOrder: 1 },
+        { name: 'Power Cord, Light', description: 'Power cord for lighting', ratePerEvent: 2.00, quantityAvailable: 20, sortOrder: 2 },
+        { name: 'Power Cord, Speaker', description: 'Power cord for speakers', ratePerEvent: 2.00, quantityAvailable: 20, sortOrder: 3 },
+        { name: 'Power Cord, Live Audio', description: 'Live audio power cord', ratePerEvent: 2.00, quantityAvailable: 20, sortOrder: 4 },
+        { name: 'Power Strip, Multi-Outlet Surge Protect', description: 'Surge-protected multi-outlet power strip', ratePerEvent: 5.00, quantityAvailable: 10, sortOrder: 5 },
       ],
     },
     {
-      name: 'Power',
+      name: 'Speakers & Monitors',
       sortOrder: 6,
       items: [
-        { name: 'Power Distribution Box', description: 'Multi-outlet power distribution unit', ratePerEvent: 25, quantityAvailable: 4, sortOrder: 1 },
-        { name: 'Extension Cord (50ft)', description: '50ft heavy-duty extension cord, 12-gauge', ratePerEvent: 5, quantityAvailable: 20, sortOrder: 2 },
-        { name: 'Power Strip (6-outlet)', description: 'Surge-protected power strip', ratePerEvent: 5, quantityAvailable: 15, sortOrder: 3 },
-        { name: 'Portable Generator', description: 'Quiet portable generator for outdoor use', ratePerEvent: 150, quantityAvailable: 1, sortOrder: 4 },
+        { name: 'Monitor, JBL 15"', description: 'JBL 15" stage monitor', ratePerEvent: 50.00, quantityAvailable: 4, sortOrder: 1 },
+        { name: 'Speaker, Wedge 15"', description: '15" wedge speaker', ratePerEvent: 50.00, quantityAvailable: 4, sortOrder: 2 },
+        { name: 'Subwoofer 15"', description: '15" subwoofer', ratePerEvent: 50.00, quantityAvailable: 2, sortOrder: 3 },
+        { name: 'Subwoofer 18"', description: '18" subwoofer', ratePerEvent: 75.00, quantityAvailable: 2, sortOrder: 4 },
+        { name: 'Maui LD, Column Array', description: 'Maui LD column array speaker system', ratePerEvent: 125.00, quantityAvailable: 2, sortOrder: 5 },
       ],
     },
     {
-      name: 'Speaker/Monitor/Subwoofer',
+      name: 'Amplifiers',
       sortOrder: 7,
       items: [
-        { name: 'Powered Speaker (12")', description: '12-inch powered PA speaker, 1000W', ratePerEvent: 50, quantityAvailable: 6, sortOrder: 1 },
-        { name: 'Powered Speaker (15")', description: '15-inch powered PA speaker, 1500W', ratePerEvent: 75, quantityAvailable: 4, sortOrder: 2 },
-        { name: 'Powered Subwoofer (18")', description: '18-inch powered subwoofer, 2000W', ratePerEvent: 100, quantityAvailable: 4, sortOrder: 3 },
-        { name: 'Stage Monitor (12")', description: '12-inch wedge stage monitor', ratePerEvent: 35, quantityAvailable: 6, sortOrder: 4 },
-        { name: 'Small Bluetooth Speaker', description: 'Portable Bluetooth speaker for background music', ratePerEvent: 15, quantityAvailable: 4, sortOrder: 5 },
+        { name: 'Amplifier, Crown', description: 'Crown power amplifier', ratePerEvent: 75.00, quantityAvailable: 2, sortOrder: 1 },
       ],
     },
     {
-      name: 'Amplifier',
+      name: 'Control Boards',
       sortOrder: 8,
       items: [
-        { name: 'Power Amplifier (2-ch)', description: '2-channel power amplifier, 500W per channel', ratePerEvent: 50, quantityAvailable: 4, sortOrder: 1 },
-        { name: 'Power Amplifier (4-ch)', description: '4-channel power amplifier, 300W per channel', ratePerEvent: 75, quantityAvailable: 2, sortOrder: 2 },
-        { name: 'Monitor Amplifier', description: 'Dedicated monitor mix amplifier', ratePerEvent: 40, quantityAvailable: 2, sortOrder: 3 },
+        { name: 'Control Board, Small', description: 'Small mixing console', ratePerEvent: 75.00, quantityAvailable: 1, sortOrder: 1 },
+        { name: 'Control Board, Large', description: 'Large mixing console', ratePerEvent: 125.00, quantityAvailable: 1, sortOrder: 2 },
       ],
     },
     {
-      name: 'Microphone',
+      name: 'Microphones',
       sortOrder: 9,
       items: [
-        { name: 'Wireless Handheld Mic', description: 'UHF wireless handheld microphone system', ratePerEvent: 35, quantityAvailable: 8, sortOrder: 1 },
-        { name: 'Wireless Lavalier Mic', description: 'UHF wireless lapel/lavalier microphone', ratePerEvent: 40, quantityAvailable: 4, sortOrder: 2 },
-        { name: 'Wireless Headset Mic', description: 'UHF wireless headset microphone', ratePerEvent: 40, quantityAvailable: 4, sortOrder: 3 },
-        { name: 'Wired Dynamic Mic (SM58)', description: 'Shure SM58 wired dynamic vocal mic', ratePerEvent: 15, quantityAvailable: 10, sortOrder: 4 },
-        { name: 'Condenser Mic (instrument)', description: 'Small-diaphragm condenser for instruments', ratePerEvent: 20, quantityAvailable: 6, sortOrder: 5 },
-      ],
-    },
-    {
-      name: 'Control Board',
-      sortOrder: 10,
-      items: [
-        { name: 'Digital Mixer (16-ch)', description: '16-channel digital mixing console', ratePerEvent: 75, quantityAvailable: 2, sortOrder: 1 },
-        { name: 'Digital Mixer (32-ch)', description: '32-channel digital mixing console', ratePerEvent: 150, quantityAvailable: 1, sortOrder: 2 },
-        { name: 'Analog Mixer (12-ch)', description: '12-channel analog mixer for small events', ratePerEvent: 35, quantityAvailable: 2, sortOrder: 3 },
-        { name: 'Lighting Controller (DMX)', description: 'DMX lighting controller console', ratePerEvent: 50, quantityAvailable: 2, sortOrder: 4 },
+        { name: 'Microphone, Wireless (Shure)', description: 'Shure wireless handheld microphone', ratePerEvent: 50.00, quantityAvailable: 4, sortOrder: 1 },
+        { name: 'Microphone Receiver, Wireless (Shure)', description: 'Shure wireless receiver unit', ratePerEvent: 10.00, quantityAvailable: 4, sortOrder: 2 },
+        { name: 'Microphone, Lavalier (Shure)', description: 'Shure lavalier/clip-on microphone', ratePerEvent: 25.00, quantityAvailable: 4, sortOrder: 3 },
+        { name: 'Microphone, Cardioid (Shure)', description: 'Shure cardioid vocal microphone', ratePerEvent: 25.00, quantityAvailable: 4, sortOrder: 4 },
+        { name: 'Microphone, Instrument (Shure SM57)', description: 'Shure SM57 instrument microphone', ratePerEvent: 25.00, quantityAvailable: 4, sortOrder: 5 },
+        { name: 'Microphone, Condenser (Shure)', description: 'Shure condenser microphone', ratePerEvent: 25.00, quantityAvailable: 2, sortOrder: 6 },
+        { name: 'Microphone, Dynamic (Shure SM58)', description: 'Shure SM58 dynamic vocal microphone', ratePerEvent: 25.00, quantityAvailable: 4, sortOrder: 7 },
       ],
     },
     {
       name: 'Specialty',
-      sortOrder: 11,
+      sortOrder: 10,
       items: [
-        { name: 'Projector (HD)', description: 'HD projector, 5000 lumens', ratePerEvent: 75, quantityAvailable: 2, sortOrder: 1 },
-        { name: 'Projector Screen (10ft)', description: '10-foot portable projection screen', ratePerEvent: 35, quantityAvailable: 2, sortOrder: 2 },
-        { name: 'LCD Monitor (55")', description: '55-inch LCD display on rolling stand', ratePerEvent: 50, quantityAvailable: 2, sortOrder: 3 },
-        { name: 'Fog Machine', description: 'Professional fog/haze machine', ratePerEvent: 40, quantityAvailable: 2, sortOrder: 4 },
-        { name: 'Photo Backdrop Frame', description: 'Adjustable backdrop frame with white drape', ratePerEvent: 30, quantityAvailable: 3, sortOrder: 5 },
+        { name: 'Specialty, Fog Machine', description: 'Fog/haze machine for atmosphere', ratePerEvent: 25.00, quantityAvailable: 1, sortOrder: 1 },
+        { name: 'Specialty, Snow Machine', description: 'Snow effect machine', ratePerEvent: 25.00, quantityAvailable: 1, sortOrder: 2 },
+        { name: 'Tape, Gaffers 150 ft', description: '150ft roll of gaffer tape', ratePerEvent: 125.00, quantityAvailable: 5, sortOrder: 3 },
       ],
     },
     {
-      name: 'Adapter',
-      sortOrder: 12,
+      name: 'Adapters',
+      sortOrder: 11,
       items: [
-        { name: 'DI Box (Active)', description: 'Active direct injection box for instruments', ratePerEvent: 10, quantityAvailable: 8, sortOrder: 1 },
-        { name: 'HDMI to VGA Adapter', description: 'HDMI to VGA converter', ratePerEvent: 5, quantityAvailable: 4, sortOrder: 2 },
-        { name: 'USB-C Hub', description: 'Multi-port USB-C hub (HDMI, USB-A, SD)', ratePerEvent: 10, quantityAvailable: 4, sortOrder: 3 },
-        { name: 'XLR Cable (25ft)', description: '25ft balanced XLR cable', ratePerEvent: 3, quantityAvailable: 20, sortOrder: 4 },
-        { name: 'Snake Cable (16-ch, 100ft)', description: '16-channel audio snake, 100ft', ratePerEvent: 40, quantityAvailable: 2, sortOrder: 5 },
+        { name: 'Adapter, AUX to Lighting', description: 'AUX cable to lighting adapter', ratePerEvent: 2.00, quantityAvailable: 10, sortOrder: 1 },
+        { name: 'Adapter, AUX to USB-C', description: 'AUX cable to USB-C adapter', ratePerEvent: 2.00, quantityAvailable: 10, sortOrder: 2 },
+        { name: 'Adapter, AUX to AUX', description: 'AUX to AUX cable adapter', ratePerEvent: 2.00, quantityAvailable: 10, sortOrder: 3 },
+        { name: 'Adapter, AUX to 1/4"', description: 'AUX cable to 1/4" adapter', ratePerEvent: 2.00, quantityAvailable: 10, sortOrder: 4 },
       ],
     },
   ];
