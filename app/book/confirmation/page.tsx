@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Booking Submitted | Shoboji Social Hall",
@@ -14,7 +15,11 @@ export default async function ConfirmationPage({
   searchParams,
 }: ConfirmationPageProps) {
   const params = await searchParams;
-  const bookingNumber = params.booking ?? "N/A";
+  const bookingNumber = params.booking;
+
+  if (!bookingNumber) {
+    redirect("/book");
+  }
 
   const steps = [
     {

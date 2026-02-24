@@ -396,30 +396,60 @@ export const EVENT_TYPE_OPTIONS = [
 
 /**
  * Find best matching packages for a given guest count and event type.
- * Returns up to 3 suggestions sorted by relevance (exact event type match first).
+ * Returns up to 3 suggestions sorted by relevance.
+ * Falls back to type-only or capacity-only matches so results are never empty.
  */
 export function suggestPackages(
   guestCount: number,
   eventType: string
 ): EventPackage[] {
-  return PACKAGES.filter(
+  // Exact matches: right event type AND within guest range
+  const exactMatches = PACKAGES.filter(
     (pkg) =>
       guestCount >= pkg.minGuests &&
       guestCount <= pkg.maxGuests &&
-      (pkg.eventTypes.includes(eventType) ||
-        pkg.eventTypes.includes("other"))
-  )
-    .sort((a, b) => {
-      // Exact event type match scores higher
-      const aMatch = a.eventTypes.includes(eventType) ? 0 : 1;
-      const bMatch = b.eventTypes.includes(eventType) ? 0 : 1;
-      if (aMatch !== bMatch) return aMatch - bMatch;
-      // Tighter guest range = more specific = higher score
-      const aRange = a.maxGuests - a.minGuests;
-      const bRange = b.maxGuests - b.minGuests;
-      return aRange - bRange;
-    })
-    .slice(0, 3);
+      (pkg.eventTypes.includes(eventType) || eventType === "other")
+  ).sort((a, b) => {
+    const aMatch = a.eventTypes.includes(eventType) ? 0 : 1;
+    const bMatch = b.eventTypes.includes(eventType) ? 0 : 1;
+    if (aMatch !== bMatch) return aMatch - bMatch;
+    const aRange = a.maxGuests - a.minGuests;
+    const bRange = b.maxGuests - b.minGuests;
+    return aRange - bRange;
+  });
+
+  // Type-only matches: right event type but outside guest range (closest capacity)
+  const typeMatches = PACKAGES.filter(
+    (pkg) =>
+      !exactMatches.includes(pkg) &&
+      (pkg.eventTypes.includes(eventType) || pkg.eventTypes.includes("other"))
+  ).sort((a, b) => {
+    const aDiff = Math.abs(guestCount - a.maxGuests);
+    const bDiff = Math.abs(guestCount - b.maxGuests);
+    return aDiff - bDiff;
+  });
+
+  // Capacity matches: within guest range but different event type
+  const capacityMatches = PACKAGES.filter(
+    (pkg) =>
+      !exactMatches.includes(pkg) &&
+      !typeMatches.includes(pkg) &&
+      guestCount >= pkg.minGuests &&
+      guestCount <= pkg.maxGuests
+  );
+
+  const results = [
+    ...exactMatches,
+    ...typeMatches.slice(0, Math.max(0, 2 - exactMatches.length)),
+    ...capacityMatches,
+  ].slice(0, 3);
+
+  // Fallback: return the largest capacity packages if still empty
+  if (results.length === 0) {
+    return PACKAGES.sort((a, b) => b.maxGuests - a.maxGuests).slice(0, 2);
+  }
+
+  return results;
 }
 
 /**

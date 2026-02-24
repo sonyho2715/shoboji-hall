@@ -256,6 +256,12 @@ export function EventDetailsForm({
               valueAsNumber: true,
               required: "Adult count is required",
               min: { value: 0, message: "Cannot be negative" },
+              validate: (val) => {
+                const adultVal = Number(val) || 0;
+                const childVal = Number(children) || 0;
+                if (adultVal + childVal < 1) return "At least 1 guest is required";
+                return true;
+              },
             })}
             className="mt-1 block w-full rounded-lg border border-stone-300 bg-white px-3 py-2.5 text-stone-900 focus:border-navy-600 focus:ring-2 focus:ring-navy-600/20 focus:outline-none"
           />

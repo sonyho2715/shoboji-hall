@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    // Get dates with confirmed or deposit-paid bookings
+    // Get dates with any non-cancelled bookings
     const bookedDates = await db.booking.findMany({
       where: {
         eventDate: {
@@ -43,11 +43,15 @@ export async function GET(req: NextRequest) {
           lte: endDate,
         },
         status: {
-          in: ["confirmed", "deposit_paid"],
+          notIn: ["cancelled"],
         },
       },
       select: {
         eventDate: true,
+        status: true,
+        bookingNumber: true,
+        customer: { select: { fullName: true } },
+        eventType: true,
       },
     });
 
@@ -69,6 +73,13 @@ export async function GET(req: NextRequest) {
         blockedDates: blockedDates.map((bd) => ({
           date: bd.blockedDate.toISOString().split("T")[0],
           reason: bd.reason,
+        })),
+        bookings: bookedDates.map((b) => ({
+          date: b.eventDate.toISOString().split("T")[0],
+          status: b.status,
+          bookingNumber: b.bookingNumber,
+          customerName: b.customer.fullName,
+          eventType: b.eventType,
         })),
       },
     });

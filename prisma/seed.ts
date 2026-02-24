@@ -299,8 +299,15 @@ async function main() {
   console.log(`  Created ${settings.length} app settings`);
 
   // ---- Admin User ----
-  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-  const adminPasswordHash = await bcrypt.hash(adminPassword, 12);
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminPassword) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('ADMIN_PASSWORD environment variable is required in production');
+    }
+    console.warn('ADMIN_PASSWORD not set. Using insecure default for development only.');
+  }
+  const passwordToHash = adminPassword || 'dev-only-change-me';
+  const adminPasswordHash = await bcrypt.hash(passwordToHash, 12);
   const adminUser = await prisma.adminUser.upsert({
     where: { email: 'admin@shoboji.org' },
     update: { passwordHash: adminPasswordHash },
