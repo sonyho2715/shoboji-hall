@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -101,9 +102,20 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-navy-700">
-        <div className="absolute inset-0 bg-gradient-to-br from-navy-900/80 via-navy-700 to-forest-700/40" />
-        <div className="relative mx-auto max-w-7xl px-4 py-28 sm:px-6 sm:py-36 lg:px-8 lg:py-44">
+      <section className="relative min-h-[600px] flex items-center justify-center overflow-hidden sm:min-h-[680px] lg:min-h-[760px]">
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/temple-hero-1.jpg"
+            alt="Soto Mission of Hawaii Shoboji temple with rainbow"
+            fill
+            className="object-cover object-center"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/75 via-slate-900/55 to-slate-800/40" />
+        </div>
+        {/* Hero content */}
+        <div className="relative z-10 mx-auto max-w-7xl px-4 py-28 sm:px-6 sm:py-36 lg:px-8 lg:py-44">
           <div className="max-w-2xl">
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
               Shoboji Social Hall
@@ -129,6 +141,101 @@ export default async function HomePage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Photo Gallery */}
+      <section className="bg-stone-100 py-3">
+        <div className="max-w-7xl mx-auto px-2 sm:px-3">
+          {/* Mobile: 2-column grid */}
+          <div className="grid grid-cols-2 gap-2 sm:hidden">
+            <div className="relative h-40 col-span-2">
+              <Image
+                src="/images/hall-activity-2.jpg"
+                alt="Shoboji Social Hall interior with stage"
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
+            <div className="relative h-28">
+              <Image
+                src="/images/hall-exterior.jpg"
+                alt="Soto Mission of Hawaii temple exterior"
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
+            <div className="relative h-28">
+              <Image
+                src="/images/hall-activity-1.jpg"
+                alt="Community gathering at Shoboji"
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
+            <div className="relative h-28">
+              <Image
+                src="/images/hall-activity-3.jpg"
+                alt="Temple interior seating"
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
+            <div className="relative h-28">
+              <Image
+                src="/images/temple-hero-2.jpg"
+                alt="Bon Dance festival at Soto Mission"
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
+          </div>
+          {/* Desktop: 4-column grid with large left feature image */}
+          <div className="hidden sm:grid sm:grid-cols-4 sm:gap-3 sm:h-80">
+            <div className="relative col-span-2 row-span-2">
+              <Image
+                src="/images/hall-activity-2.jpg"
+                alt="Shoboji Social Hall interior with stage"
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
+            <div className="relative">
+              <Image
+                src="/images/hall-exterior.jpg"
+                alt="Soto Mission of Hawaii temple exterior"
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
+            <div className="relative">
+              <Image
+                src="/images/hall-activity-1.jpg"
+                alt="Community gathering at Shoboji"
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
+            <div className="relative">
+              <Image
+                src="/images/hall-activity-3.jpg"
+                alt="Temple interior seating"
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
+            <div className="relative">
+              <Image
+                src="/images/temple-hero-2.jpg"
+                alt="Bon Dance festival at Soto Mission"
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
+          </div>
+        </div>
+        <p className="mt-2 text-center text-xs text-stone-400 px-2">
+          Photos courtesy of Soto Mission of Hawaii (sotomission.org)
+        </p>
       </section>
 
       {/* About */}
