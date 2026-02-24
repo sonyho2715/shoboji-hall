@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model MembershipTier {
+  id                 Int        @id @default(autoincrement())
+  tierName           String     @unique @map("tier_name")
+  description        String?
+  hallBaseRate       Decimal    @map("hall_base_rate") @db.Decimal(10, 2)
+  hallHourlyRate     Decimal    @map("hall_hourly_rate") @db.Decimal(10, 2)
+  eventSupportBase   Decimal    @map("event_support_base") @db.Decimal(10, 2)
+  eventSupportHourly Decimal    @map("event_support_hourly") @db.Decimal(10, 2)
+  securityDeposit    Decimal    @default(0) @map("security_deposit") @db.Decimal(10, 2)
+  isActive           Boolean    @default(true) @map("is_active")
+  createdAt          DateTime   @default(now()) @map("created_at")
+  updatedAt          DateTime   @updatedAt @map("updated_at")
+  customers          Customer[]
+  bookings           Booking[]
+
+  @@map("membership_tiers")
+}
+
+model FuneralPackageTier {
+  id              Int     @id @default(autoincrement())
+  tierName        String  @map("tier_name")
+  attendeeRange   String  @map("attendee_range")
+  minAttendees    Int     @map("min_attendees")
+  maxAttendees    Int     @map("max_attendees")
+  rate            Decimal @db.Decimal(10, 2)
+  securityDeposit Decimal @default(0) @map("security_deposit") @db.Decimal(10, 2)
+  isActive        Boolean @default(true) @map("is_active")
+
+  @@map("funeral_package_tiers")
+}
+
+model StaffingRule {
+  id            Int  @id @default(autoincrement())
+  minAttendees  Int  @map("min_attendees")
+  maxAttendees  Int? @map("max_attendees")
+  requiredStaff Int  @map("required_staff")
+
+  @@map("staffing_rules")
+}
+
+model EquipmentCategory {
+  id        Int             @id @default(autoincrement())
+  name      String
+  sortOrder Int             @default(0) @map("sort_order")
+  items     EquipmentItem[]
+
+  @@map("equipment_categories")
+}
+
+model EquipmentItem {
+  id                Int                @id @default(autoincrement())
+  categoryId        Int                @map("category_id")
+  category          EquipmentCategory  @relation(fields: [categoryId], references: [id])
+  name              String
+  description       String?
+  ratePerEvent      Decimal            @map("rate_per_event") @db.Decimal(10, 2)
+  quantityAvailable Int                @default(1) @map("quantity_available")
+  isActive          Boolean            @default(true) @map("is_active")
+  sortOrder         Int                @default(0) @map("sort_order")
+  bookingEquipment  BookingEquipment[]
+
+  @@map("equipment_items")
+}
+
+model ServiceRate {
+  id              Int              @id @default(autoincrement())
+  roleName        String           @map("role_name")
+  ratePerHour     Decimal?         @map("rate_per_hour") @db.Decimal(10, 2)
+  rateType        String           @default("hourly") @map("rate_type")
+  commissionPct   Decimal?         @map("commission_pct") @db.Decimal(5, 2)
+  minHours        Int              @default(2) @map("min_hours")
+  notes           String?
+  isActive        Boolean          @default(true) @map("is_active")
+  bookingServices BookingService[]
+
+  @@map("service_rates")
+}
+
+model Customer {
+  id               Int             @id @default(autoincrement())
+  fullName         String          @map("full_name")
+  organization     String?
+  phone            String?
+  email            String?
+  mailingAddress   String?         @map("mailing_address")
+  preferredContact String          @default("email") @map("preferred_contact")
+  membershipTierId Int?            @map("membership_tier_id")
+  membershipTier   MembershipTier? @relation(fields: [membershipTierId], references: [id])
+  isMember         Boolean         @default(false) @map("is_member")
+  notes            String?
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  bookings         Booking[]
+
+  @@map("customers")
+}
+
+model Booking {
+  id                  Int                @id @default(autoincrement())
+  customerId          Int                @map("customer_id")
+  customer            Customer           @relation(fields: [customerId], references: [id])
+  bookingNumber       String             @unique @map("booking_number")
+  status              String             @default("inquiry")
+  eventType           String?            @map("event_type")
+  eventDescription    String?            @map("event_description")
+  eventDate           DateTime           @map("event_date") @db.Date
+  eventStartTime      DateTime           @map("event_start_time") @db.Time()
+  eventEndTime        DateTime           @map("event_end_time") @db.Time()
+  setupHours          Decimal            @default(0) @map("setup_hours") @db.Decimal(4, 1)
+  breakdownHours      Decimal            @default(0) @map("breakdown_hours") @db.Decimal(4, 1)
+  rehearsalDatetime   DateTime?          @map("rehearsal_datetime")
+  adultCount          Int                @default(0) @map("adult_count")
+  childCount          Int                @default(0) @map("child_count")
+  expectedVehicles    Int                @default(0) @map("expected_vehicles")
+  bookingType         String             @default("hall_rental") @map("booking_type")
+  roomSetup           String?            @map("room_setup")
+  alcoholServed       Boolean            @default(false) @map("alcohol_served")
+  barType             String?            @map("bar_type")
+  specialRequirements Json               @default("[]") @map("special_requirements")
+  additionalNotes     String?            @map("additional_notes")
+  membershipTierId    Int?               @map("membership_tier_id")
+  membershipTier      MembershipTier?    @relation(fields: [membershipTierId], references: [id])
+  isFuneralPackage    Boolean            @default(false) @map("is_funeral_package")
+  hallRentalTotal     Decimal            @default(0) @map("hall_rental_total") @db.Decimal(10, 2)
+  eventSupportTotal   Decimal            @default(0) @map("event_support_total") @db.Decimal(10, 2)
+  equipmentTotal      Decimal            @default(0) @map("equipment_total") @db.Decimal(10, 2)
+  servicesTotal       Decimal            @default(0) @map("services_total") @db.Decimal(10, 2)
+  securityDeposit     Decimal            @default(0) @map("security_deposit") @db.Decimal(10, 2)
+  grandTotal          Decimal            @default(0) @map("grand_total") @db.Decimal(10, 2)
+  inquiryDate         DateTime           @default(now()) @map("inquiry_date")
+  quoteSentDate       DateTime?          @map("quote_sent_date")
+  depositReceivedDate DateTime?          @map("deposit_received_date")
+  assignedStaff       String?            @map("assigned_staff")
+  followUpDate        DateTime?          @map("follow_up_date") @db.Date
+  referralSource      String?            @map("referral_source")
+  createdAt           DateTime           @default(now()) @map("created_at")
+  updatedAt           DateTime           @updatedAt @map("updated_at")
+  bookingEquipment    BookingEquipment[]
+  bookingServices     BookingService[]
+  bookingHistory      BookingHistory[]
+
+  @@map("bookings")
+}
+
+model BookingEquipment {
+  id          Int           @id @default(autoincrement())
+  bookingId   Int           @map("booking_id")
+  booking     Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  equipmentId Int           @map("equipment_id")
+  equipment   EquipmentItem @relation(fields: [equipmentId], references: [id])
+  quantity    Int           @default(1)
+  unitRate    Decimal       @map("unit_rate") @db.Decimal(10, 2)
+  lineTotal   Decimal       @map("line_total") @db.Decimal(10, 2)
+
+  @@map("booking_equipment")
+}
+
+model BookingService {
+  id          Int         @id @default(autoincrement())
+  bookingId   Int         @map("booking_id")
+  booking     Booking     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  serviceId   Int         @map("service_id")
+  service     ServiceRate @relation(fields: [serviceId], references: [id])
+  hours       Decimal     @default(0) @db.Decimal(4, 1)
+  rateApplied Decimal     @map("rate_applied") @db.Decimal(10, 2)
+  lineTotal   Decimal     @default(0) @map("line_total") @db.Decimal(10, 2)
+
+  @@map("booking_services")
+}
+
+model BookingHistory {
+  id          Int      @id @default(autoincrement())
+  bookingId   Int      @map("booking_id")
+  booking     Booking  @relation(fields: [bookingId], references: [id])
+  action      String
+  details     Json?
+  performedBy String?  @map("performed_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("booking_history")
+}
+
+model BlockedDate {
+  id          Int      @id @default(autoincrement())
+  blockedDate DateTime @map("blocked_date") @db.Date
+  reason      String?
+  blockedBy   String?  @map("blocked_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("blocked_dates")
+}
+
+model AppSetting {
+  id           Int      @id @default(autoincrement())
+  settingKey   String   @unique @map("setting_key")
+  settingValue String   @map("setting_value")
+  description  String?
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("app_settings")
+}
