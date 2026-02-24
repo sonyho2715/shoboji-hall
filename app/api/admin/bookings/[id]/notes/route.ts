@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth';
+import { logBookingAction } from '@/lib/booking-history';
 
 const notesSchema = z.object({
   notes: z.string(),
@@ -36,14 +37,12 @@ export async function PATCH(
       data: { additionalNotes: notes },
     });
 
-    await db.bookingHistory.create({
-      data: {
-        bookingId,
-        action: 'notes_updated',
-        details: { updatedBy: session.email },
-        performedBy: session.email,
-      },
-    });
+    await logBookingAction(
+      bookingId,
+      'notes_updated',
+      { updatedBy: session.email },
+      session.email
+    );
 
     return NextResponse.json({ success: true, data: booking });
   } catch (error) {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth';
+import { logBookingAction } from '@/lib/booking-history';
 
 const VALID_STATUSES = [
   'inquiry',
@@ -70,18 +71,12 @@ export async function PATCH(
     });
 
     // Log status change in history
-    await db.bookingHistory.create({
-      data: {
-        bookingId,
-        action: `status_changed`,
-        details: {
-          from: current.status,
-          to: status,
-          note: note || null,
-        },
-        performedBy: session.email,
-      },
-    });
+    await logBookingAction(
+      bookingId,
+      'status_changed',
+      { from: current.status, to: status, note: note || null },
+      session.email
+    );
 
     return NextResponse.json({ success: true, data: booking });
   } catch (error) {

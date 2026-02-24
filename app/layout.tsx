@@ -10,9 +10,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Shoboji Social Hall | Event Venue in Honolulu, Hawaii",
+  title: "Shoboji Social Hall | Facility Rentals in Honolulu, Hawaii",
   description:
-    "Book the Shoboji Social Hall for weddings, receptions, celebrations, and community events. Flexible seating for up to 450+ guests with full AV equipment in Honolulu, Hawaii.",
+    "Book the Shoboji Social Hall for your special event. Flexible rental packages for members and non-members. Weddings, receptions, memorials, and community gatherings in Honolulu.",
   keywords: [
     "event venue",
     "Honolulu",
@@ -22,12 +22,26 @@ export const metadata: Metadata = {
     "reception hall",
     "Shoboji",
     "temple hall",
+    "facility rental",
+    "community event",
   ],
   openGraph: {
-    title: "Shoboji Social Hall | Event Venue in Honolulu, Hawaii",
+    title: "Shoboji Social Hall | Facility Rentals",
     description:
-      "Book the Shoboji Social Hall for weddings, receptions, celebrations, and community events in Honolulu.",
+      "Book the Shoboji Social Hall for your special event. Flexible rental packages for members and non-members.",
     type: "website",
+    siteName: "Shoboji Social Hall",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shoboji Social Hall | Facility Rentals",
+    description:
+      "Book the Shoboji Social Hall for your special event in Honolulu, Hawaii.",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
