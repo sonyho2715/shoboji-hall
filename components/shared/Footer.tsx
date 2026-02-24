@@ -13,9 +13,9 @@ export function Footer() {
               Shoboji Social Hall
             </h3>
             <p className="mt-3 text-sm leading-relaxed text-stone-400">
-              A welcoming community venue rooted in the traditions of Shoboji
-              Temple, serving Honolulu families and organizations for
-              celebrations, ceremonies, and gatherings of every kind.
+              Honolulu&#39;s premier social hall for weddings, receptions,
+              corporate events, and community gatherings. Professionally
+              managed with in-house catering by Nu&#39;uanu Cookhouse.
             </p>
           </div>
 
@@ -89,7 +89,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 border-t border-stone-700 pt-6 text-center text-sm text-stone-500">
-          &copy; {currentYear} Shoboji Social Hall. All rights reserved.
+          &copy; {currentYear} Shoboji Social Hall &middot; Managed by Horiuchi Pacific Development Group
         </div>
       </div>
     </footer>

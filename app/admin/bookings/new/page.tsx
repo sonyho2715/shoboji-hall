@@ -192,7 +192,7 @@ export default function NewBookingPage() {
                     htmlFor="isMember"
                     className="text-sm font-medium text-gray-700"
                   >
-                    Active temple member
+                    Active member
                   </label>
                 </div>
               </div>

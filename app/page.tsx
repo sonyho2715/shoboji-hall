@@ -106,6 +106,25 @@ export default async function HomePage() {
       {/* Hero with Parallax */}
       <ParallaxHero />
 
+      {/* Stats Bar */}
+      <div className="bg-slate-900 text-white py-4">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-wrap justify-center gap-8 md:gap-16 text-center">
+            {[
+              { value: '450+', label: 'Guest Capacity' },
+              { value: '8', label: 'Event Packages' },
+              { value: '40+', label: 'AV Equipment Items' },
+              { value: 'Mon\u2013Sat', label: '8AM\u201310PM Available' },
+            ].map(stat => (
+              <div key={stat.label}>
+                <p className="text-2xl font-bold text-amber-400">{stat.value}</p>
+                <p className="text-xs text-stone-400 uppercase tracking-wide mt-0.5">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Photo Gallery */}
       <section className="bg-stone-100 py-3">
         <div className="max-w-7xl mx-auto px-2 sm:px-3">
@@ -113,40 +132,40 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 gap-2 sm:hidden">
             <div className="relative h-40 col-span-2">
               <Image
-                src="/images/hall-activity-2.jpg"
-                alt="Shoboji Social Hall interior with stage"
+                src="https://images.unsplash.com/photo-1478146059778-26028b07395a?w=800&q=80"
+                alt="Elegant wedding reception table setup"
                 fill
                 className="object-cover rounded-lg"
               />
             </div>
             <div className="relative h-28">
               <Image
-                src="/images/hall-exterior.jpg"
-                alt="Soto Mission of Hawaii temple exterior"
+                src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&q=80"
+                alt="Beautiful event venue interior"
                 fill
                 className="object-cover rounded-lg"
               />
             </div>
             <div className="relative h-28">
               <Image
-                src="/images/hall-activity-1.jpg"
-                alt="Community gathering at Shoboji"
+                src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80"
+                alt="Banquet dinner setup with warm lighting"
                 fill
                 className="object-cover rounded-lg"
               />
             </div>
             <div className="relative h-28">
               <Image
-                src="/images/hall-activity-3.jpg"
-                alt="Temple interior seating"
+                src="https://images.unsplash.com/photo-1560184897-ae75f418493e?w=800&q=80"
+                alt="Cocktail reception event"
                 fill
                 className="object-cover rounded-lg"
               />
             </div>
             <div className="relative h-28">
               <Image
-                src="/images/temple-hero-2.jpg"
-                alt="Bon Dance festival at Soto Mission"
+                src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=800&q=80"
+                alt="Corporate event and seminar setup"
                 fill
                 className="object-cover rounded-lg"
               />
@@ -156,49 +175,46 @@ export default async function HomePage() {
           <div className="hidden sm:grid sm:grid-cols-4 sm:gap-3 sm:h-80">
             <div className="relative col-span-2 row-span-2">
               <Image
-                src="/images/hall-activity-2.jpg"
-                alt="Shoboji Social Hall interior with stage"
+                src="https://images.unsplash.com/photo-1478146059778-26028b07395a?w=800&q=80"
+                alt="Elegant wedding reception table setup"
                 fill
                 className="object-cover rounded-lg"
               />
             </div>
             <div className="relative">
               <Image
-                src="/images/hall-exterior.jpg"
-                alt="Soto Mission of Hawaii temple exterior"
+                src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&q=80"
+                alt="Beautiful event venue interior"
                 fill
                 className="object-cover rounded-lg"
               />
             </div>
             <div className="relative">
               <Image
-                src="/images/hall-activity-1.jpg"
-                alt="Community gathering at Shoboji"
+                src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80"
+                alt="Banquet dinner setup with warm lighting"
                 fill
                 className="object-cover rounded-lg"
               />
             </div>
             <div className="relative">
               <Image
-                src="/images/hall-activity-3.jpg"
-                alt="Temple interior seating"
+                src="https://images.unsplash.com/photo-1560184897-ae75f418493e?w=800&q=80"
+                alt="Cocktail reception event"
                 fill
                 className="object-cover rounded-lg"
               />
             </div>
             <div className="relative">
               <Image
-                src="/images/temple-hero-2.jpg"
-                alt="Bon Dance festival at Soto Mission"
+                src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=800&q=80"
+                alt="Corporate event and seminar setup"
                 fill
                 className="object-cover rounded-lg"
               />
             </div>
           </div>
         </div>
-        <p className="mt-2 text-center text-xs text-stone-400 px-2">
-          Photos courtesy of Soto Mission of Hawaii (sotomission.org)
-        </p>
       </section>
 
       {/* Package Suggester Section */}
@@ -224,16 +240,28 @@ export default async function HomePage() {
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold text-stone-900">
-            Your Event, Our Legacy
+            Honolulu&#39;s Premier Social Hall
           </h2>
           <p className="mt-6 text-lg leading-relaxed text-stone-600">
-            Nestled within the grounds of Shoboji Temple on South Beretania
-            Street, our social hall has been the home of countless celebrations,
-            gatherings, and milestones for Honolulu families. With a spacious
-            main hall accommodating up to 450+ guests, a fully equipped
-            commercial kitchen, and dedicated staff, we provide everything you
-            need for an event that truly honors the occasion.
+            Shoboji Social Hall offers an elegant, fully-equipped venue in the heart of Honolulu
+            for celebrations of all kinds. With a spacious main hall accommodating up to 450+ guests,
+            professional AV equipment on-site, dedicated event support staff, and in-house catering
+            through Nu&#39;uanu Cookhouse, we handle every detail so you can focus on what matters most.
           </p>
+          <div className="mt-8 grid grid-cols-3 gap-6 text-center">
+            <div>
+              <p className="text-3xl font-bold text-navy-700">450+</p>
+              <p className="mt-1 text-sm text-stone-500">Guest Capacity</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-navy-700">40+</p>
+              <p className="mt-1 text-sm text-stone-500">AV Equipment Items</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-navy-700">6</p>
+              <p className="mt-1 text-sm text-stone-500">Rental Tiers</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -406,6 +434,9 @@ export default async function HomePage() {
               Check Available Dates
             </Link>
           </div>
+          <p className="mt-6 text-xs text-stone-400">
+            Managed by Horiuchi Pacific Development Group · Catering by Nu&#39;uanu Cookhouse
+          </p>
         </div>
       </section>
     </>

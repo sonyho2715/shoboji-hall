@@ -165,17 +165,17 @@ export default async function RatesPage() {
       {/* Membership Info */}
       <section className="mt-16 rounded-xl border border-stone-200 bg-white p-6 sm:p-8">
         <h2 className="text-2xl font-bold text-stone-900">
-          Annual Temple Membership
+          Annual Membership
         </h2>
         <div className="mt-4 grid gap-6 sm:grid-cols-2">
           <div>
             <p className="text-4xl font-bold text-navy-700">$150</p>
             <p className="text-sm text-stone-500">per year</p>
             <p className="mt-4 text-sm leading-relaxed text-stone-600">
-              Temple members receive significantly reduced hall rental rates,
+              Members receive significantly reduced hall rental rates,
               lower or waived security deposits, and priority booking access.
-              Membership supports the Shoboji Temple community and its ongoing
-              programs.
+              Membership supports the Shoboji Social Hall community and its
+              ongoing programs.
             </p>
           </div>
           <div className="rounded-lg bg-stone-50 p-4">

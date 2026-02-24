@@ -172,11 +172,11 @@ export function ClientInfoForm({ data, tiers, onNext }: ClientInfoFormProps) {
           />
           <div>
             <span className="text-sm font-medium text-stone-700">
-              I am a current Shoboji Temple member
+              I am a current Shoboji member
             </span>
             {!isMember && (
               <p className="mt-1 text-xs text-stone-500">
-                Not a member? Save on your bookings with our $150/year temple
+                Not a member? Save on your bookings with our $150/year
                 membership. Ask us about becoming a member.
               </p>
             )}

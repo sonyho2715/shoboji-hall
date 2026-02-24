@@ -25,7 +25,7 @@ export function ParallaxHero() {
         ref={bgRef}
         className="absolute inset-0 will-change-transform"
         style={{
-          backgroundImage: 'url(/images/temple-hero-1.jpg)',
+          backgroundImage: 'url(https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1920&q=85)',
           backgroundSize: 'cover',
           backgroundPosition: 'center top',
           top: '-15%',
@@ -39,7 +39,7 @@ export function ParallaxHero() {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 py-28 sm:px-6 sm:py-36 lg:px-8 lg:py-44">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-amber-300 mb-4">
-            Soto Mission of Hawaii
+            Honolulu, Hawaii · Est. in the Heart of Nu&#39;uanu
           </p>
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
             Shoboji Social Hall

@@ -20,7 +20,7 @@ async function main() {
       update: {},
       create: {
         tierName: 'Member',
-        description: 'Active Shoboji temple member',
+        description: 'Active Shoboji member',
         hallBaseRate: 600,
         hallHourlyRate: 50,
         eventSupportBase: 200,
@@ -285,7 +285,7 @@ async function main() {
     { settingKey: 'operating_hours_end', settingValue: '22:00', description: 'Latest allowed event end time' },
     { settingKey: 'base_hours_included', settingValue: '4', description: 'Number of hours included in base rate' },
     { settingKey: 'booking_number_prefix', settingValue: 'SH', description: 'Prefix for booking numbers' },
-    { settingKey: 'annual_membership_fee', settingValue: '150', description: 'Annual temple membership fee in dollars' },
+    { settingKey: 'annual_membership_fee', settingValue: '150', description: 'Annual membership fee in dollars' },
     { settingKey: 'alcohol_requires_police', settingValue: 'true', description: 'Whether alcohol events require HPD detail' },
   ];
 

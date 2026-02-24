@@ -201,7 +201,7 @@ export function RateSheetDocument({ data }: { data: RateSheetData }) {
           <Text style={s.orgName}>Shoboji Social Hall</Text>
           <Text style={s.subtitle}>Rates & Pricing</Text>
           <Text style={s.address}>
-            Soto Mission of Hawaii | 1708 Nuuanu Avenue, Honolulu, HI 96817
+            Nu&#39;uanu, Honolulu, HI | Managed by Horiuchi Pacific Development Group
           </Text>
         </View>
 
@@ -329,7 +329,7 @@ export function RateSheetDocument({ data }: { data: RateSheetData }) {
             - All events must conclude by 10:00 PM. Setup may not begin before 8:00 AM.
           </Text>
           <Text style={s.noteText}>
-            - Temple members receive priority booking and reduced rates. Annual membership: $150.
+            - Members receive priority booking and reduced rates. Annual membership: $150.
           </Text>
           <Text style={s.noteText}>
             - Contact us for custom pricing on multi-day events or special arrangements.
@@ -339,7 +339,7 @@ export function RateSheetDocument({ data }: { data: RateSheetData }) {
         {/* Footer */}
         <Text style={s.footer}>
           Rates effective {currentYear}. Contact us for custom pricing. |
-          Soto Mission of Hawaii Shoboji | (808) 537-9409 | info@shoboji.org
+          Shoboji Social Hall | (808) 537-9409 | info@shoboji.org
         </Text>
       </Page>
     </Document>

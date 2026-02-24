@@ -71,7 +71,7 @@ export function buildInquiryReceivedEmailHTML(data: InquiryReceivedData): string
 
         <!-- Footer -->
         <tr><td style="background-color: ${WARM_WHITE}; padding: 20px 32px; text-align: center; border-top: 1px solid #e7e5e4;">
-          <p style="margin: 0 0 4px; color: ${STONE}; font-size: 12px;">Soto Mission of Hawaii Shoboji</p>
+          <p style="margin: 0 0 4px; color: ${STONE}; font-size: 12px;">Shoboji Social Hall</p>
           <p style="margin: 0 0 4px; color: ${STONE}; font-size: 12px;">1708 Nuuanu Avenue, Honolulu, HI 96817</p>
           <p style="margin: 0; color: ${STONE}; font-size: 12px;">(808) 537-9409 | info@shoboji.org</p>
         </td></tr>
@@ -104,7 +104,7 @@ Mahalo,
 Shoboji Social Hall
 
 ---
-Soto Mission of Hawaii Shoboji
+Shoboji Social Hall
 1708 Nuuanu Avenue, Honolulu, HI 96817
 (808) 537-9409 | info@shoboji.org`;
 }

@@ -256,7 +256,7 @@ export function QuoteDocument({ data }: { data: QuoteData }) {
         <View style={s.headerRow}>
           <View style={s.headerLeft}>
             <Text style={s.orgName}>Shoboji Social Hall</Text>
-            <Text style={s.headerSub}>Soto Mission of Hawaii</Text>
+            <Text style={s.headerSub}>Managed by Horiuchi Pacific Development Group</Text>
             <Text style={s.headerSub}>1708 Nuuanu Avenue</Text>
             <Text style={s.headerSub}>Honolulu, HI 96817</Text>
             <Text style={s.headerSub}>Phone: (808) 537-9409</Text>
@@ -418,7 +418,7 @@ export function QuoteDocument({ data }: { data: QuoteData }) {
 
         {/* Footer */}
         <Text style={s.footer}>
-          Soto Mission of Hawaii Shoboji | Quote generated {data.issueDate}
+          Shoboji Social Hall | Quote generated {data.issueDate}
         </Text>
       </Page>
     </Document>
