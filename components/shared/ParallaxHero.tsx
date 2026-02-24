@@ -20,20 +20,24 @@ export function ParallaxHero() {
 
   return (
     <section className="relative w-full min-h-[600px] sm:min-h-[680px] lg:min-h-[760px] flex items-center justify-center overflow-hidden">
-      {/* Parallax background */}
+      {/* Parallax background — gradient */}
       <div
         ref={bgRef}
         className="absolute inset-0 will-change-transform"
         style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1920&q=85)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center top',
+          background: 'linear-gradient(135deg, #0f2035 0%, #162d4a 40%, #1b3a2e 75%, #0f2035 100%)',
           top: '-15%',
           bottom: '-15%',
         }}
       />
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/75 via-slate-900/55 to-slate-800/40" />
+      {/* Subtle pattern overlay for depth */}
+      <div
+        className="absolute inset-0 opacity-10"
+        style={{
+          backgroundImage: `radial-gradient(circle at 25% 35%, #d4a855 0%, transparent 50%),
+                            radial-gradient(circle at 75% 65%, #2d6a4f 0%, transparent 50%)`,
+        }}
+      />
 
       {/* Centered content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 py-28 sm:px-6 sm:py-36 lg:px-8 lg:py-44">

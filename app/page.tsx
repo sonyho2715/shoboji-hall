@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { PackageSuggester } from "@/components/packages/PackageSuggester";
 import { ParallaxHero } from "@/components/shared/ParallaxHero";
 
@@ -125,97 +124,6 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* Photo Gallery */}
-      <section className="bg-stone-100 py-3">
-        <div className="max-w-7xl mx-auto px-2 sm:px-3">
-          {/* Mobile: 2-column grid */}
-          <div className="grid grid-cols-2 gap-2 sm:hidden">
-            <div className="relative h-40 col-span-2">
-              <Image
-                src="https://images.unsplash.com/photo-1478146059778-26028b07395a?w=800&q=80"
-                alt="Elegant wedding reception table setup"
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
-            <div className="relative h-28">
-              <Image
-                src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&q=80"
-                alt="Beautiful event venue interior"
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
-            <div className="relative h-28">
-              <Image
-                src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80"
-                alt="Banquet dinner setup with warm lighting"
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
-            <div className="relative h-28">
-              <Image
-                src="https://images.unsplash.com/photo-1560184897-ae75f418493e?w=800&q=80"
-                alt="Cocktail reception event"
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
-            <div className="relative h-28">
-              <Image
-                src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=800&q=80"
-                alt="Corporate event and seminar setup"
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
-          </div>
-          {/* Desktop: 4-column grid with large left feature image */}
-          <div className="hidden sm:grid sm:grid-cols-4 sm:gap-3 sm:h-80">
-            <div className="relative col-span-2 row-span-2">
-              <Image
-                src="https://images.unsplash.com/photo-1478146059778-26028b07395a?w=800&q=80"
-                alt="Elegant wedding reception table setup"
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
-            <div className="relative">
-              <Image
-                src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&q=80"
-                alt="Beautiful event venue interior"
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
-            <div className="relative">
-              <Image
-                src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80"
-                alt="Banquet dinner setup with warm lighting"
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
-            <div className="relative">
-              <Image
-                src="https://images.unsplash.com/photo-1560184897-ae75f418493e?w=800&q=80"
-                alt="Cocktail reception event"
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
-            <div className="relative">
-              <Image
-                src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=800&q=80"
-                alt="Corporate event and seminar setup"
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Package Suggester Section */}
       <section id="packages" className="bg-white py-20">
