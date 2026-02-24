@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { StepIndicator } from "./StepIndicator";
 import type { StepDef } from "./StepIndicator";
 import { ClientInfoForm } from "./ClientInfoForm";
@@ -15,57 +16,130 @@ import type {
   MembershipTierOption,
   EquipmentCategoryOption,
 } from "./types";
+import type { EventPackage } from "@/lib/packages";
+
+export interface PackagePreFill {
+  package: EventPackage;
+  guestCount: number;
+  /** Equipment items matched from the DB catalog */
+  matchedEquipment: Array<{
+    equipmentId: number;
+    quantity: number;
+    unitRate: number;
+    name: string;
+  }>;
+}
 
 interface BookingWizardProps {
   tiers: MembershipTierOption[];
   equipmentCategories: EquipmentCategoryOption[];
+  packagePreFill?: PackagePreFill;
 }
 
-const initialFormData: BookingFormData = {
-  clientInfo: {
-    fullName: "",
-    organization: "",
-    phone: "",
-    email: "",
-    mailingAddress: "",
-    preferredContact: "email",
-    membershipTierId: 0,
-    isMember: false,
-  },
-  eventDetails: {
-    eventType: "",
-    eventDescription: "",
-    eventDate: "",
-    eventStartTime: "",
-    eventEndTime: "",
-    setupHours: 0,
-    breakdownHours: 0,
-    adultCount: 0,
-    childCount: 0,
-    expectedVehicles: 0,
-    referralSource: "",
-  },
-  venueRequirements: {
-    bookingType: "hall_catering",
-    roomSetup: "",
-    alcoholServed: false,
-    barType: "",
-    specialRequirements: [],
-    additionalNotes: "",
-    budgetRange: "",
-    readyToReserve: false,
-  },
-  catering: {
-    serviceStyle: "",
-    cuisines: [],
-    cuisineOther: "",
-    dietary: "",
-    menuNotes: "",
-    dessertNeeded: false,
-    beverages: [],
-  },
-  equipment: [],
-};
+function buildInitialFormData(preFill?: PackagePreFill): BookingFormData {
+  if (!preFill) {
+    return {
+      clientInfo: {
+        fullName: "",
+        organization: "",
+        phone: "",
+        email: "",
+        mailingAddress: "",
+        preferredContact: "email",
+        membershipTierId: 0,
+        isMember: false,
+      },
+      eventDetails: {
+        eventType: "",
+        eventDescription: "",
+        eventDate: "",
+        eventStartTime: "",
+        eventEndTime: "",
+        setupHours: 0,
+        breakdownHours: 0,
+        adultCount: 0,
+        childCount: 0,
+        expectedVehicles: 0,
+        referralSource: "",
+      },
+      venueRequirements: {
+        bookingType: "hall_catering",
+        roomSetup: "",
+        alcoholServed: false,
+        barType: "",
+        specialRequirements: [],
+        additionalNotes: "",
+        budgetRange: "",
+        readyToReserve: false,
+      },
+      catering: {
+        serviceStyle: "",
+        cuisines: [],
+        cuisineOther: "",
+        dietary: "",
+        menuNotes: "",
+        dessertNeeded: false,
+        beverages: [],
+      },
+      equipment: [],
+    };
+  }
+
+  const pkg = preFill.package;
+
+  // Calculate start/end time from duration
+  // Default start 10:00 AM, end based on durationHours
+  const startHour = 10;
+  const endHour = Math.min(22, startHour + pkg.durationHours);
+  const startTime = `${String(startHour).padStart(2, "0")}:00`;
+  const endTime = `${String(endHour).padStart(2, "0")}:00`;
+
+  return {
+    clientInfo: {
+      fullName: "",
+      organization: "",
+      phone: "",
+      email: "",
+      mailingAddress: "",
+      preferredContact: "email",
+      membershipTierId: 0,
+      isMember: false,
+    },
+    eventDetails: {
+      eventType: pkg.eventTypes[0] || "",
+      eventDescription: "",
+      eventDate: "",
+      eventStartTime: startTime,
+      eventEndTime: endTime,
+      setupHours: pkg.setupHours,
+      breakdownHours: pkg.breakdownHours,
+      adultCount: preFill.guestCount,
+      childCount: 0,
+      expectedVehicles: 0,
+      referralSource: "",
+    },
+    venueRequirements: {
+      bookingType: pkg.bookingType,
+      roomSetup: pkg.roomSetup,
+      alcoholServed: pkg.alcoholDefault,
+      barType: "",
+      specialRequirements: pkg.specialRequirements,
+      additionalNotes: "",
+      budgetRange: "",
+      readyToReserve: false,
+    },
+    catering: {
+      serviceStyle: "",
+      cuisines: [],
+      cuisineOther: "",
+      dietary: "",
+      menuNotes: "",
+      dessertNeeded: false,
+      beverages: [],
+    },
+    equipment: preFill.matchedEquipment,
+  };
+}
 
 function hasCateringStep(bookingType: string): boolean {
   return bookingType === "hall_catering" || bookingType === "catering_only";
@@ -74,10 +148,13 @@ function hasCateringStep(bookingType: string): boolean {
 export function BookingWizard({
   tiers,
   equipmentCategories,
+  packagePreFill,
 }: BookingWizardProps) {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<BookingFormData>(initialFormData);
+  const [formData, setFormData] = useState<BookingFormData>(
+    () => buildInitialFormData(packagePreFill)
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -237,6 +314,30 @@ export function BookingWizard({
 
   return (
     <div>
+      {/* Package Pre-fill Banner */}
+      {packagePreFill && (
+        <div className="mb-4 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+          <span className="text-2xl" role="img" aria-label={packagePreFill.package.name}>
+            {packagePreFill.package.icon}
+          </span>
+          <div className="flex-1">
+            <p className="font-semibold text-amber-900">
+              You selected the {packagePreFill.package.name} package
+            </p>
+            <p className="mt-0.5 text-sm text-amber-700">
+              We have pre-filled your event details, venue setup, and equipment
+              based on this package. You can customize everything below.
+            </p>
+          </div>
+          <Link
+            href="/packages"
+            className="shrink-0 text-xs font-medium text-amber-700 underline-offset-2 hover:underline"
+          >
+            Change package
+          </Link>
+        </div>
+      )}
+
       <StepIndicator
         currentStep={currentStep}
         steps={steps}

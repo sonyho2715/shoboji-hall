@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { PackageSuggester } from "@/components/packages/PackageSuggester";
 
 export const dynamic = "force-dynamic";
 
@@ -133,10 +134,10 @@ export default async function HomePage() {
                 Check Availability
               </Link>
               <Link
-                href="/book"
+                href="#packages"
                 className="rounded-lg bg-white px-6 py-3 text-center font-semibold text-navy-700 transition-colors hover:bg-stone-100"
               >
-                Book Your Event
+                Find My Package
               </Link>
             </div>
           </div>
@@ -236,6 +237,25 @@ export default async function HomePage() {
         <p className="mt-2 text-center text-xs text-stone-400 px-2">
           Photos courtesy of Soto Mission of Hawaii (sotomission.org)
         </p>
+      </section>
+
+      {/* Package Suggester Section */}
+      <section id="packages" className="bg-white py-20">
+        <div className="mx-auto max-w-5xl px-4">
+          <div className="mb-10 text-center">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-amber-700">
+              Find Your Perfect Package
+            </p>
+            <h2 className="text-3xl font-bold text-slate-900">
+              Tell us about your event
+            </h2>
+            <p className="mt-3 text-lg text-slate-600">
+              Enter your guest count and event type. We will recommend the right
+              package instantly.
+            </p>
+          </div>
+          <PackageSuggester />
+        </div>
       </section>
 
       {/* About */}

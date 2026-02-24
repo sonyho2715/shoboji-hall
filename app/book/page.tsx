@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { BookingWizard } from "@/components/booking/BookingWizard";
+import type { PackagePreFill } from "@/components/booking/BookingWizard";
 import type {
   MembershipTierOption,
   EquipmentCategoryOption,
 } from "@/components/booking/types";
+import { getPackageById } from "@/lib/packages";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +15,13 @@ export const metadata: Metadata = {
   description:
     "Book the Shoboji Social Hall for your next event. Get an instant quote with our step-by-step booking wizard.",
 };
+
+interface BookPageProps {
+  searchParams: Promise<{
+    package?: string;
+    guests?: string;
+  }>;
+}
 
 async function getMembershipTiers(): Promise<MembershipTierOption[]> {
   const tiers = await db.membershipTier.findMany({
@@ -57,11 +66,63 @@ async function getEquipmentCategories(): Promise<EquipmentCategoryOption[]> {
   }));
 }
 
-export default async function BookPage() {
+/**
+ * Match package equipment names to actual DB equipment items.
+ * Uses case-insensitive partial matching for resilience.
+ */
+function buildPackagePreFill(
+  packageId: string,
+  guestCount: number,
+  equipmentCategories: EquipmentCategoryOption[]
+): PackagePreFill | undefined {
+  const pkg = getPackageById(packageId);
+  if (!pkg) return undefined;
+
+  // Flatten all equipment items from all categories
+  const allItems = equipmentCategories.flatMap((c) => c.items);
+
+  // Match package equipment names to DB items
+  const matchedEquipment: PackagePreFill["matchedEquipment"] = [];
+  for (const pkgItem of pkg.includedEquipment) {
+    const dbItem = allItems.find(
+      (item) => item.name.toLowerCase() === pkgItem.name.toLowerCase()
+    );
+    if (dbItem) {
+      // Clamp quantity to available
+      const quantity = Math.min(pkgItem.quantity, dbItem.quantityAvailable);
+      matchedEquipment.push({
+        equipmentId: dbItem.id,
+        quantity,
+        unitRate: Number(dbItem.ratePerEvent),
+        name: dbItem.name,
+      });
+    }
+  }
+
+  return {
+    package: pkg,
+    guestCount,
+    matchedEquipment,
+  };
+}
+
+export default async function BookPage({ searchParams }: BookPageProps) {
+  const params = await searchParams;
   const [tiers, equipmentCategories] = await Promise.all([
     getMembershipTiers(),
     getEquipmentCategories(),
   ]);
+
+  // Build package pre-fill if URL params are present
+  let packagePreFill: PackagePreFill | undefined;
+  if (params.package) {
+    const guestCount = params.guests ? Number(params.guests) : 100;
+    packagePreFill = buildPackagePreFill(
+      params.package,
+      guestCount,
+      equipmentCategories
+    );
+  }
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
@@ -78,6 +139,7 @@ export default async function BookPage() {
       <BookingWizard
         tiers={tiers}
         equipmentCategories={equipmentCategories}
+        packagePreFill={packagePreFill}
       />
     </div>
   );

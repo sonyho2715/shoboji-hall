@@ -157,6 +157,66 @@ export function autoAddHPD(alcoholServed: boolean, durationHours: number): numbe
 /**
  * Calculate complete quote from all inputs.
  */
+// ---- Package Price Estimation ----
+
+/**
+ * Simplified base rates for package price estimation (no DB needed).
+ * These are approximate member / non-member rates for display purposes.
+ * Actual quotes use the DB-driven membership tiers.
+ */
+interface EstimateRates {
+  hallBaseRate: number;
+  hallHourlyRate: number;
+  eventSupportBase: number;
+  eventSupportHourly: number;
+}
+
+const ESTIMATE_RATES: { member: EstimateRates; non_member: EstimateRates } = {
+  member: {
+    hallBaseRate: 600,
+    hallHourlyRate: 100,
+    eventSupportBase: 150,
+    eventSupportHourly: 25,
+  },
+  non_member: {
+    hallBaseRate: 1200,
+    hallHourlyRate: 200,
+    eventSupportBase: 250,
+    eventSupportHourly: 40,
+  },
+};
+
+export interface PackagePriceEstimate {
+  memberEstimate: number;
+  nonMemberEstimate: number;
+}
+
+/**
+ * Estimate a package's price for display on package cards.
+ * Uses simplified calculation: hall base + overtime + event support base + overtime.
+ * Does NOT include equipment (shown separately) or services.
+ * This gives a "starting from" price for quick comparison.
+ */
+export function estimatePackagePrice(
+  durationHours: number,
+  guestCount: number,
+): PackagePriceEstimate {
+  function calc(rates: EstimateRates): number {
+    const overtimeHours = Math.max(0, durationHours - BASE_HOURS);
+    const hallTotal = rates.hallBaseRate + overtimeHours * rates.hallHourlyRate;
+    const staffCount = calculateStaffCount(guestCount);
+    const supportTotal =
+      rates.eventSupportBase +
+      overtimeHours * rates.eventSupportHourly * staffCount;
+    return round2(hallTotal + supportTotal);
+  }
+
+  return {
+    memberEstimate: calc(ESTIMATE_RATES.member),
+    nonMemberEstimate: calc(ESTIMATE_RATES.non_member),
+  };
+}
+
 export function calculateQuote(input: QuoteInput): QuoteResult {
   const {
     membershipTier,

@@ -10,6 +10,7 @@ export function Header() {
     { href: "/", label: "Home" },
     { href: "/rates", label: "Rates" },
     { href: "/equipment", label: "Equipment" },
+    { href: "/packages", label: "Packages" },
     { href: "/availability", label: "Check Availability" },
   ];
 
