@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { PackageSuggester } from "@/components/packages/PackageSuggester";
+import { ParallaxHero } from "@/components/shared/ParallaxHero";
 
 export const dynamic = "force-dynamic";
 
@@ -102,47 +103,8 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative min-h-[600px] flex items-center justify-center overflow-hidden sm:min-h-[680px] lg:min-h-[760px]">
-        {/* Background image */}
-        <div className="absolute inset-0">
-          <Image
-            src="/images/temple-hero-1.jpg"
-            alt="Soto Mission of Hawaii Shoboji temple with rainbow"
-            fill
-            className="object-cover object-center"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/75 via-slate-900/55 to-slate-800/40" />
-        </div>
-        {/* Hero content */}
-        <div className="relative z-10 mx-auto max-w-7xl px-4 py-28 sm:px-6 sm:py-36 lg:px-8 lg:py-44">
-          <div className="max-w-2xl">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Shoboji Social Hall
-            </h1>
-            <p className="mt-4 text-lg leading-relaxed text-stone-200 sm:text-xl">
-              A gracious gathering place in the heart of Honolulu, where
-              tradition meets celebration. Host your wedding, reception,
-              memorial, or community event in our spacious, fully-equipped hall.
-            </p>
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <Link
-                href="/availability"
-                className="rounded-lg border-2 border-white/30 px-6 py-3 text-center font-semibold text-white transition-colors hover:border-white hover:bg-white/10"
-              >
-                Check Availability
-              </Link>
-              <Link
-                href="#packages"
-                className="rounded-lg bg-white px-6 py-3 text-center font-semibold text-navy-700 transition-colors hover:bg-stone-100"
-              >
-                Find My Package
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero with Parallax */}
+      <ParallaxHero />
 
       {/* Photo Gallery */}
       <section className="bg-stone-100 py-3">
