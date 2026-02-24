@@ -43,6 +43,17 @@ export default function Error({
       >
         Try Again
       </button>
+      <p className="mt-4 text-sm text-stone-500">
+        Need help? Call us at{' '}
+        <a href="tel:808-944-4737" className="text-navy-700 underline">
+          808-944-4737
+        </a>{' '}
+        or{' '}
+        <a href="mailto:info@shoboji.org" className="text-navy-700 underline">
+          email us
+        </a>
+        .
+      </p>
     </div>
   );
 }
