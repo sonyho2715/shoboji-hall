@@ -1,5 +1,6 @@
 import { PrismaClient } from '../app/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import bcrypt from 'bcryptjs';
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
@@ -316,6 +317,19 @@ async function main() {
     });
   }
   console.log(`  Created ${settings.length} app settings`);
+
+  // ---- Admin User ----
+  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+  const adminUser = await prisma.adminUser.upsert({
+    where: { email: 'admin@shoboji.org' },
+    update: {},
+    create: {
+      email: 'admin@shoboji.org',
+      passwordHash: await bcrypt.hash(adminPassword, 12),
+      name: 'Site Administrator',
+    },
+  });
+  console.log(`  Admin user ready: ${adminUser.email}`);
 
   console.log('Seeding complete!');
 }
